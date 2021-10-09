@@ -1,6 +1,13 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.8.RELEASE")
+    }
+}
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
-    id 'java'
+    id "java"
+    id "org.jetbrains.kotlin.jvm"
+    id "org.springframework.boot" version "${springbootVersion}"
+    id "io.spring.dependency-management" version "${springDependencyVer}"
 }
 
 group 'org.harryng.demo.communication'
@@ -12,11 +19,82 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVer}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+
+    implementation project(":demo-communication-api")
+    implementation project(":demo-communication-impl")
+
+    implementation "org.springframework.boot:spring-boot:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jdbc:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springbootVersion}"
+
+    // implementation "org.springframework.boot:spring-boot-starter-integration:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web-services:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-security:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-websocket:${springbootVersion}"
+
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springbootVersion}"
+
+//    implementation "org.springframework.security:spring-security-web:${springVersion}"
+//    implementation "org.springframework.security:spring-security-config:${springVersion}"
+
+    implementation "org.apache.commons:commons-dbcp2:${apacheCommonVersion}"
+    implementation "org.apache.commons:commons-pool2:${apacheCommonVersion}"
+
+    implementation "javax.servlet:jstl:${jstlVersion}"
+    implementation "org.aspectj:aspectjrt:${aspectjVersion}"
+    implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
+
+    implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
+//    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJoseVersion}"
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "org.keycloak:keycloak-servlet-filter-adapter:${keycloakVer}"
+    implementation "org.keycloak:keycloak-installed-adapter:${keycloakVer}"
+
+//    implementation "org.springframework:spring-core:${springVersion}"
+//    implementation "org.springframework:spring-context:${springVersion}"
+//    implementation "org.springframework:spring-context-support:${springVersion}"
+
+    implementation "com.h2database:h2:${h2Version}"
+    implementation "org.postgresql:postgresql:${pgsqlVersion}"
+
+//    implementation "org.springframework:spring-websocket:${springVersion}"
+
+    // for war
+//    providedRuntime "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+//    providedRuntime "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+//    providedRuntime "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+//    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
+
+    // for jar
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
+    // testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"
 }
 
-test {
-    useJUnitPlatform()
-}
+// test {
+//     useJUnitPlatform()
+// }
+
+// tasks.withType<KotlinCompile> {
+//   kotlinOptions {
+//     freeCompilerArgs = listOf("-Xjsr305=strict")
+//     jvmTarget = "11"
+//   }
+// }
+
+// tasks.withType<Test> {
+//   useJUnitPlatform()
+// }

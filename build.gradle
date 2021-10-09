@@ -1,2 +1,31 @@
-group 'org.harryng.demo.communication'
-version '1.0-SNAPSHOT'
+plugins {
+    id "java"
+    id "org.jetbrains.kotlin.jvm" version "${kotlinVer}"
+}
+allprojects {
+    buildscript {
+        ext {}
+    }
+    apply plugin: "java"
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    }
+    group 'org.harryng.demo'
+    version '1.0-SNAPSHOT'
+    java.sourceCompatibility = JavaVersion.VERSION_11
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_11
+            // apiVersion = "1.7"
+            // languageVersion = "1.7"
+        }
+    }
+}

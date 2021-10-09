@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="@{~/css/welcome.css}" />
+    <script type="text/javascript" src="@{/{path}/js/jquery-3.4.1.min.js(path=${contextPath})}"></script>
+    <script type="text/javascript" src="${contextPath}/js/jose.min.js"></script>
+    <script type="text/javascript" src="${contextPath}/js/util.js"></script>
+    <script type="text/javascript" src="${contextPath}/js/crypto.js"></script>
+    <script type="text/javascript" src="${contextPath}/js/pbkdf2.js"></script>
+    <script type="text/javascript" src="${contextPath}/js/auth.js"></script>
+</head>
+
+<body>
+    <div class="center">
+        <form id="authForm" method="post" action="login" onsubmit="return false;">
+            <table style="border: 0;">
+                <thead>
+                    <tr>
+                        <td>LOGIN</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Username</td>
+                    </tr>
+                    <tr>
+                        <td><input id="txtUsername" name="txtUsername" placeholder="Username" autocomplete="off" /></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                    </tr>
+                    <tr>
+                        <td><input type="password" id="txtPassword" name="txtPassword" placeholder="Password" autocomplete="off" /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><input type="submit" id="submit" value="Login" name="submit" /><input id="tokenId" name="tokenId" type="hidden" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#submit').bind("click", function() {
+                Authenticator.loginByUnamePasswd($('#txtUsername').val(), $('#txtPassword').val(), function(result) {
+                    if (result) {
+                        $(location).prop('href', 'afterLogin?tokenId=' + $('#txtUsername').val());
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

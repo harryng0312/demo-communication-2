@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+    http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+    <bean id="chatEndpoint" class="org.harryng.demo.endpoint.ChatEndpoint" init-method="postConstruct"/>
+
+    <bean id="httpChatHandler" class="org.harryng.demo.endpoint.HttpChatHandler"/>
+    <bean id="chatInterceptor" class="org.harryng.demo.endpoint.HttpChatInterceptor"/>
+
+    <bean id="webRtcChatHandler" class="org.harryng.demo.endpoint.WebRtcChatHandler"/>
+
+    <bean id="fileUploadHandler" class="org.harryng.demo.endpoint.FileUploadHandler" />
+
+    <websocket:handlers>
+        <websocket:mapping path="ws/chat-handler" handler="httpChatHandler"/>
+        <websocket:handshake-interceptors>
+            <ref bean="chatInterceptor"/>
+        </websocket:handshake-interceptors>
+    </websocket:handlers>
+
+    <websocket:handlers allowed-origins="*">
+        <websocket:mapping path="ws/socket" handler="webRtcChatHandler" />
+    </websocket:handlers>
+
+    <websocket:handlers>
+        <websocket:mapping path="ws/upload" handler="fileUploadHandler"/>
+    </websocket:handlers>
+
+    <websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">
+        <websocket:stomp-endpoint path="/ws/chat" allowed-origins="*"/>
+        <websocket:stomp-endpoint path="/ws/chat" allowed-origins="*">
+            <websocket:sockjs websocket-enabled="true" heartbeat-time="20000"/>
+        </websocket:stomp-endpoint>
+        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origins="*"/>
+        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origins="*">
+            <websocket:sockjs websocket-enabled="true" heartbeat-time="20000"/>
+        </websocket:stomp-endpoint>
+        <websocket:simple-broker prefix="/topic, /queue"/>
+    </websocket:message-broker>
+
+    <!--    <websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">-->
+    <!--        <websocket:stomp-endpoint path="/portfolio">-->
+    <!--            <websocket:sockjs websocket-enabled="true" />-->
+    <!--        </websocket:stomp-endpoint>-->
+    <!--        <websocket:simple-broker prefix="/topic, /queue"/>-->
+    <!--    </websocket:message-broker>-->
+
+    <!--    <bean id="webSocketConfig" class="org.harryng.demo.config.WebSocketConfig"/>-->
+    <!--    <aop:config>-->
+    <!--        <aop:pointcut id="userServiceOperation"-->
+    <!--                      expression="execution(* com.videabiz.badgechain.publisher.user.service.UserServiceImpl.add(..))"/>-->
+    <!--        <aop:advisor pointcut-ref="userServiceOperation" advice-ref="requiredTxAdvice" order="100"/>-->
+    <!--    </aop:config>-->
+</beans>

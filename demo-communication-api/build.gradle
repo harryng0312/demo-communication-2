@@ -1,9 +1,9 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
-    id 'java'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java-library'
 }
 
-group 'org.harryng.demo.communication'
+group 'org.harryng.demo.communication.api'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -12,9 +12,12 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVer}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation "javax.persistence:javax.persistence-api:2.2"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
 
 test {

@@ -2,10 +2,12 @@
 **/.idea/
 **/.vscode/
 **/bin/
-gradle/
+**/build/
 **/.DS_Store
 
 **/.classpath
 **/.settings/
+
+gradle/
 
 .project
