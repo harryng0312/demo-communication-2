@@ -1,0 +1,5 @@
+rootProject.name = 'demo-communication-2'
+include 'demo-communication-api'
+include 'demo-communication-impl'
+include 'demo-communication-web'
+
