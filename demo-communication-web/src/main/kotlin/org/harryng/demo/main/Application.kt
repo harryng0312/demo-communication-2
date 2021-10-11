@@ -12,10 +12,10 @@ import org.springframework.context.annotation.ImportResource
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @ImportResource("classpath:spring-cfg.xml")
-public class Application : SpringBootServletInitializer() {
+open class Application : SpringBootServletInitializer() {
 
     companion object{
-        public val logger = LoggerFactory.getLogger(Application::class.java)
+        val logger : Logger = LoggerFactory.getLogger(Application::class.java)
     }
 
 //    @Override
