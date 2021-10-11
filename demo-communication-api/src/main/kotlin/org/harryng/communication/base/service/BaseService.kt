@@ -9,7 +9,7 @@ interface BaseService<Id : Serializable, T : BaseEntity<Id>> {
     val persistence: BasePersistence<Id, T>
 
     @Throws(RuntimeException::class, Exception::class)
-    fun getById(id: Id): T
+    fun getById(id: Id): T?
 
     @Throws(RuntimeException::class, Exception::class)
     fun add(obj: T): Int

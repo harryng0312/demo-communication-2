@@ -3,7 +3,7 @@ package org.harryng.communication.auth.service
 
 import org.harryng.communication.user.entity.UserImpl
 import org.harryng.communication.user.service.UserService
-import org.harryng.communication.util.persistence.SecurityUtil
+import org.harryng.communication.util.SecurityUtil
 import org.springframework.beans.factory.annotation.Autowired
 
 
@@ -14,7 +14,7 @@ class AuthServiceImpl : AuthService {
     @Throws(RuntimeException::class, Exception::class)
     override fun loginByUsernamePassword(username: String, password: String): UserImpl? {
         val user: UserImpl? = userService.getByUsername(username)
-        if (password == null) {
+        if ("" == password) {
             throw Exception("Password is not valid")
         }
         if (user != null) {

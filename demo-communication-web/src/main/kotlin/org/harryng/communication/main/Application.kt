@@ -1,4 +1,4 @@
-package org.harryng.demo.main
+package org.harryng.communication.main
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

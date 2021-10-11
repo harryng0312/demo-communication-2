@@ -1,4 +1,4 @@
-package org.harryng.communication.util.persistence
+package org.harryng.communication.util
 
 import org.slf4j.LoggerFactory
 import java.security.MessageDigest
