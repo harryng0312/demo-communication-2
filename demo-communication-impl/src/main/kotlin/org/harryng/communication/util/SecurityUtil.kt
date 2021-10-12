@@ -15,9 +15,7 @@ object SecurityUtil {
     }
 
     fun hashMessage(mdAlg: String, msgBin: ByteArray?): ByteArray {
-        var result = byteArrayOf()
-        result = getMessageDigest(mdAlg)!!.digest(msgBin)
-        return result
+        return getMessageDigest(mdAlg)!!.digest(msgBin)
     }
 
     init {

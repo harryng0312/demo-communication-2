@@ -6,14 +6,14 @@
 
     http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
-    <bean id="chatEndpoint" class="org.harryng.demo.endpoint.ChatEndpoint" init-method="postConstruct"/>
+    <bean id="chatEndpoint" class="org.harryng.communication.endpoint.ChatEndpoint" init-method="postConstruct"/>
 
-    <bean id="httpChatHandler" class="org.harryng.demo.endpoint.HttpChatHandler"/>
-    <bean id="chatInterceptor" class="org.harryng.demo.endpoint.HttpChatInterceptor"/>
+    <bean id="httpChatHandler" class="org.harryng.communication.endpoint.HttpChatHandler"/>
+    <bean id="chatInterceptor" class="org.harryng.communication.endpoint.HttpChatInterceptor"/>
 
-    <bean id="webRtcChatHandler" class="org.harryng.demo.endpoint.WebRtcChatHandler"/>
+    <bean id="webRtcChatHandler" class="org.harryng.communication.endpoint.WebRtcChatHandler"/>
 
-    <bean id="fileUploadHandler" class="org.harryng.demo.endpoint.FileUploadHandler" />
+    <bean id="fileUploadHandler" class="org.harryng.communication.endpoint.FileUploadHandler" />
 
     <websocket:handlers>
         <websocket:mapping path="ws/chat-handler" handler="httpChatHandler"/>
