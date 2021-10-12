@@ -9,5 +9,16 @@ import java.io.Serializable
 interface BaseSearchableService<Id : Serializable, T : BaseEntity<Id>> : BaseService<Id, T> {
 
     @Throws(RuntimeException::class, Exception::class)
-    fun findByConditions(pageInfo: Pageable, entityClass: Class<T>, queryStr: String, total: Long, params: Map<String, Serializable>): Page<T>
+    fun findByConditions(
+        countJpql: String,
+        params: Map<String, Serializable>
+    ): Long
+
+    @Throws(RuntimeException::class, Exception::class)
+    fun findByConditions(
+        queryJpql: String,
+        params: Map<String, Serializable>,
+        pageInfo: Pageable,
+        total: Long = -1,
+    ): Page<T>
 }

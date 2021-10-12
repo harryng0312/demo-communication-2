@@ -10,18 +10,31 @@ abstract class AbstractSearchablePersistence<Id : Serializable, T : BaseEntity<I
     AbstractPersistence<Id, T>(entityClass), BaseSearchablePersistence<Id, T> {
 
     @Throws(RuntimeException::class, Exception::class)
+    override fun countByConditions(
+        countJpql: String,
+        params: Map<String, Serializable>
+    ): Long {
+        return PersistenceUtil.countObjectByQuery(
+            entityManager = entityManager,
+            countJpql = countJpql,
+            params = params
+        )
+    }
+
+    @Throws(RuntimeException::class, Exception::class)
     override fun selectByConditions(
-        queryStr: String,
+        queryJpql: String,
+        params: Map<String, Serializable>,
         pageInfo: Pageable,
         total: Long,
-        params: Map<String, Serializable>
     ): Page<T> {
         return PersistenceUtil.selectObjectByQuery(
             entityManager = entityManager,
+            returnType = entityClass,
+            queryJpql = queryJpql,
+            params = params,
             pageInfo = pageInfo,
-            total = total,
-            typeClass = entityClass,
-            queryStr = queryStr
+            total = total
         )
     }
 }

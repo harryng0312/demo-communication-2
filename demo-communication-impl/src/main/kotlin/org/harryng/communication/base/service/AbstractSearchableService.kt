@@ -14,12 +14,27 @@ abstract class AbstractSearchableService<Id : Serializable, T : BaseEntity<Id>> 
 
     @Throws(RuntimeException::class, Exception::class)
     override fun findByConditions(
-        pageInfo: Pageable,
-        entityClass: Class<T>,
-        queryStr: String,
-        total: Long,
+        countJpql: String,
         params: Map<String, Serializable>
+    ): Long {
+        return persistence.countByConditions(
+            countJpql,
+            params
+        )
+    }
+
+    @Throws(RuntimeException::class, Exception::class)
+    override fun findByConditions(
+        queryStr: String,
+        params: Map<String, Serializable>,
+        pageInfo: Pageable,
+        total: Long
     ): Page<T> {
-        return persistence.selectByConditions(queryStr, pageInfo, 0, params )
+        return persistence.selectByConditions(
+            queryStr,
+            params,
+            pageInfo,
+            total
+        )
     }
 }

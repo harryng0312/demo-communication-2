@@ -9,5 +9,5 @@
 **/.settings/
 
 gradle/
-
+db/
 .project

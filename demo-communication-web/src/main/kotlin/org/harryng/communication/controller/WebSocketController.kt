@@ -81,7 +81,7 @@ open class WebSocketController {
         val sha = StompHeaderAccessor.wrap(event.message)
         val username = sha.getFirstNativeHeader("user")
         logger.info("User $username connected")
-        val authentication: Authentication = UsernamePasswordAuthenticationToken(username, "", ArrayList())
+        val authentication: Authentication = UsernamePasswordAuthenticationToken(username, "", mutableListOf())
         val securityContext = SecurityContextHolder.getContext()
         securityContext.authentication = authentication
     }

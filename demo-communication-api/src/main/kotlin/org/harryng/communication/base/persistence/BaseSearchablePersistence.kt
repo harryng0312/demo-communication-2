@@ -8,10 +8,16 @@ import java.io.Serializable
 interface BaseSearchablePersistence<Id : Serializable, T : BaseEntity<Id>> : BasePersistence<Id, T> {
 
     @Throws(RuntimeException::class)
-    fun selectByConditions(
-        queryStr: String,
-        pageInfo: Pageable,
-        total: Long,
+    fun countByConditions(
+        countJpql: String,
         params: Map<String, Serializable>
+    ): Long
+
+    @Throws(RuntimeException::class)
+    fun selectByConditions(
+        queryJpql: String,
+        params: Map<String, Serializable>,
+        pageInfo: Pageable,
+        total: Long = -1
     ): Page<T>
 }
