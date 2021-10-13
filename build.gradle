@@ -12,6 +12,7 @@ allprojects {
         mavenLocal()
     }
     dependencies {
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVer}"
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"

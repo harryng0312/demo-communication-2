@@ -26,17 +26,5 @@
 
     <entity class="org.harryng.communication.user.entity.UserImpl">
         <table name="user_"/>
-        <!--		<attributes>-->
-        <!--			<id name="id"/>-->
-        <!--		</attributes>-->
-        <!-- 		<table-generator name="seq_default" allocation-size="1" -->
-        <!-- 			initial-value="1" table="counter" pk-column-name="id" -->
-        <!-- 			pk-column-value="task" value-column-name="count" /> -->
-        <!-- <attribute-override name=""> -->
-        <!-- </attribute-override> -->
-
-        <!-- <attributes> -->
-        <!-- <transient name=""/> -->
-        <!-- </attributes> -->
     </entity>
 </entity-mappings>

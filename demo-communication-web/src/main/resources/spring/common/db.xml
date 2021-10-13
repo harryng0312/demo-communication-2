@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
     <tx:annotation-driven transaction-manager="defaultTransactionManager" mode="aspectj"/>
-
-    <context:property-placeholder location="classpath:db.properties"/>
-
+    <import resource="common.xml"/>
     <bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="${db.driver}"/>
         <property name="url" value="${db.url}"/>
@@ -19,18 +15,26 @@
         <property name="maxTotal" value="${db.maxPoolSize}"/>
         <property name="maxOpenPreparedStatements" value="5"/>
     </bean>
-<!--    <bean id="dsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
-<!--        <property name="dataSource" ref="dataSource"/>-->
-<!--    </bean>-->
-<!--    <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">-->
-<!--        <constructor-arg name="dataSource" ref="dataSource"/>-->
-<!--    </bean>-->
-
+    <!--    <bean id="dsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+    <!--        <property name="dataSource" ref="dataSource"/>-->
+    <!--    </bean>-->
+    <!--    <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">-->
+    <!--        <constructor-arg name="dataSource" ref="dataSource"/>-->
+    <!--    </bean>-->
+    <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           destroy-method="destroy">
         <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
         <property name="persistenceUnitName" value="primary"/>
         <property name="dataSource" ref="dataSource"/>
+<!--        <property name="validationMode" value="NONE" />-->
+        <!--        <property name="packagesToScan">-->
+        <!--            <list>-->
+        <!--                <value>org.harryng.communication.**.entity</value>-->
+        <!--            </list>-->
+        <!--        </property>-->
         <!--        <property name="packagesToScan">-->
         <!--            <list>-->
         <!--                <value>org.harryng.kotlin.demo.**.persistence</value>-->
@@ -53,7 +57,7 @@
             <map>
                 <entry key="showSql" value="${jpa.showSql}"/>
                 <entry key="hibernate.dialect" value="${jpa.dialect}"/>
-                <!--                <entry key="hibernate.hbm2ddl.auto" value="create-drop" />-->
+                <entry key="hibernate.hbm2ddl.auto" value="create-drop"/>
             </map>
         </property>
         <property name="loadTimeWeaver">
@@ -69,12 +73,12 @@
         </property>
     </bean>
 
-<!--    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">-->
-<!--        <constructor-arg name="transactionManagers">-->
-<!--            <list>-->
-<!--&lt;!&ndash;                <ref bean="dsTransactionManager"/>&ndash;&gt;-->
-<!--                <ref bean="jpaTransactionManager"/>-->
-<!--            </list>-->
-<!--        </constructor-arg>-->
-<!--    </bean>-->
+    <!--    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">-->
+    <!--        <constructor-arg name="transactionManagers">-->
+    <!--            <list>-->
+    <!--&lt;!&ndash;                <ref bean="dsTransactionManager"/>&ndash;&gt;-->
+    <!--                <ref bean="jpaTransactionManager"/>-->
+    <!--            </list>-->
+    <!--        </constructor-arg>-->
+    <!--    </bean>-->
 </beans>

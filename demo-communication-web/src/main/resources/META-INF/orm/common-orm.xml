@@ -37,5 +37,5 @@
             </basic>
         </attributes>
     </mapped-superclass>
-    <converter class="org.harryng.kotlin.demo.entity.AtomicLongConverter" auto-apply="true"/>
+    <converter class="org.harryng.communication.util.persistence.AtomicLongConverter" auto-apply="true"/>
 </entity-mappings>

@@ -82,6 +82,15 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
     // testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"
+
+    // for base gRPC
+    implementation "io.grpc:grpc-netty:${grpcVer}"
+    implementation "io.grpc:grpc-stub:${grpcVer}"
+    implementation "io.grpc:grpc-kotlin-stub:${grpcKotlinStubVer}"
+    implementation "io.grpc:grpc-protobuf:${grpcVer}"
+    // for generated code
+    implementation "com.google.protobuf:protobuf-java:${protobufVer}"
+    implementation "com.google.protobuf:protobuf-kotlin-lite:${protobufVer}"
 }
 
 // test {

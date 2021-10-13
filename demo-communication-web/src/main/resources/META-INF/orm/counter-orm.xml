@@ -3,7 +3,7 @@
                  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd">
-    <mapped-superclass class="org.harryng.kotlin.demo.entity.CounterModel">
+    <mapped-superclass class="org.harryng.communication.counter.entity.CounterModel">
         <attributes>
             <basic name="value">
                 <column name="value_"/>
@@ -13,10 +13,7 @@
 
     </mapped-superclass>
 
-    <entity class="org.harryng.kotlin.demo.entity.CounterImpl">
+    <entity class="org.harryng.communication.counter.entity.CounterImpl">
         <table name="counter"/>
-        <!--		<attributes>-->
-        <!--			<id name="id"/>-->
-        <!--		</attributes>-->
     </entity>
 </entity-mappings>

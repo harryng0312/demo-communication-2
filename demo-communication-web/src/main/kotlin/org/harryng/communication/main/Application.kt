@@ -29,7 +29,7 @@ open class Application : SpringBootServletInitializer() {
 //    }
 
     @Override
-    override protected fun configure(application: SpringApplicationBuilder) : SpringApplicationBuilder {
+    override fun configure(application: SpringApplicationBuilder) : SpringApplicationBuilder {
         return application.sources(Application::class.java)
     }
 }

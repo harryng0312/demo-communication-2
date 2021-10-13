@@ -133,9 +133,9 @@
     <!-- ensure that the above transactional advice runs for any execution
       of an operation defined by the FooService interface -->
     <aop:config>
-        <aop:pointcut id="persistenceOperation" expression="within(org.harryng.kotlin.demo..persistence.*)"/>
+        <aop:pointcut id="persistenceOperation" expression="within(org.harryng.communication..persistence.*)"/>
         <aop:pointcut id="serviceOperation"
-                      expression="within(org.harryng.kotlin.demo..service.*) &amp;&amp; !@annotation(org.springframework.transaction.annotation.Transactional)"/>
+                      expression="within(org.harryng.communication..service.*) &amp;&amp; !@annotation(org.springframework.transaction.annotation.Transactional)"/>
         <aop:advisor pointcut-ref="persistenceOperation" advice-ref="requiredTxAdvicePersistence" order="0"/>
         <aop:advisor pointcut-ref="serviceOperation" advice-ref="supportTxAdvice" order="0"/>
     </aop:config>

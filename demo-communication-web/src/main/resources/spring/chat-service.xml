@@ -2,13 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <import resource="common.xml"/>
-    <bean id="chatService" class="org.harryng.kotlin.demo.rpc.service.ChatServiceKtImpl"/>
-    <bean id="authInterceptor" class="org.harryng.kotlin.demo.rpc.interceptor.AuthInterceptor"/>
+    <import resource="common/common.xml"/>
+    <bean id="chatService" class="org.harryng.communication.rpc.service.ChatServiceKtImpl"/>
+    <bean id="authInterceptor" class="org.harryng.communication.rpc.interceptor.AuthInterceptor"/>
 
-    <bean id="grpcServer" class="org.harryng.kotlin.demo.rpc.server.GrpcServer"
+    <bean id="grpcServer" class="org.harryng.communication.rpc.server.GrpcServer"
           init-method="init" destroy-method="stop">
-        <constructor-arg name="port" value="${gprc.server.port}"/>
+        <constructor-arg name="port" value="${grpc.server.port}"/>
         <constructor-arg name="services">
             <list>
                 <ref bean="chatService"/>
@@ -19,8 +19,8 @@
                 <ref bean="authInterceptor"/>
             </list>
         </constructor-arg>
-        <constructor-arg name="certChain" value="classpath:ks/ca.pem"/>
-        <constructor-arg name="privateKey" value="classpath:ks/ca.key"/>
+        <constructor-arg name="certChain" value="${file.ca.ks/ca.pem"/>
+        <constructor-arg name="privateKey" value="${file.ca.ks/ca.key"/>
     </bean>
 
 </beans>
