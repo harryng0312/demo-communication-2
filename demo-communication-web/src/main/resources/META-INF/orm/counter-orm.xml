@@ -10,7 +10,6 @@
             </basic>
             <transient name="maxValue"/>
         </attributes>
-
     </mapped-superclass>
 
     <entity class="org.harryng.communication.counter.entity.CounterImpl">

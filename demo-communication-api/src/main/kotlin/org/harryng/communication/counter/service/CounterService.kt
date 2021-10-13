@@ -1,7 +1,7 @@
 package org.harryng.communication.counter.service
 
 import org.harryng.communication.counter.entity.CounterImpl
-import org.harryng.communication.kernel.CounterPersistence
+import org.harryng.communication.kernel.counter.CounterPersistence
 import kotlin.jvm.Throws
 
 interface CounterService{

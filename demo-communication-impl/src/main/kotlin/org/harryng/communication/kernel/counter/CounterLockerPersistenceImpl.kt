@@ -1,4 +1,4 @@
-package org.harryng.communication.kernel
+package org.harryng.communication.kernel.counter
 
 import org.harryng.communication.counter.entity.CounterImpl
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,12 +10,6 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.locks.ReentrantLock
 
 open class CounterLockerPersistenceImpl : CounterPersistence {
-
-    companion object {
-        @JvmStatic
-        protected val lock = Object()
-    }
-
     private val locker = ReentrantLock()
 
     @Autowired
@@ -84,7 +78,7 @@ open class CounterLockerPersistenceImpl : CounterPersistence {
     }
 
     override fun increment(id: String, step: Int): Long {
-        var rs: Long
+        val rs: Long
         try {
             locker.lock()
             rs = doIncrement(id, step)
@@ -98,7 +92,7 @@ open class CounterLockerPersistenceImpl : CounterPersistence {
     }
 
     override fun currentValue(id: String): Long {
-        var rs: Long
+        val rs: Long
         try {
             locker.lock()
             rs = currentCounter(id).value.get()

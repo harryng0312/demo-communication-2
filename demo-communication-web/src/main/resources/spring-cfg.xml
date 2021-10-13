@@ -7,16 +7,10 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 <!--    <context:spring-configured/>-->
-    <context:annotation-config/>
     <mvc:annotation-driven />
-<!--    <context:component-scan base-package="org.harryng.demo"/>-->
-<!--    <context:component-scan base-package="org.harryng.demo.controller, org.harryng.demo.endpoint, org.harryng.demo.config"/>-->
-<!--    <context:component-scan base-package="org.harryng.communication.controller, org.harryng.communication.endpoint"/>-->
-    <!-- <import resource="classpath:spring/**/*.xml" /> -->
-    <!-- 	<import resource="classpath:spring/*.xml" /> -->
-    <!-- 	<import resource="classpath:spring/bean/*.xml" /> -->
-<!--    <import resource="classpath:spring/**/*.xml"/>-->
-<!--    <import resource="classpath*:spring/aop.xml" />-->
+    <context:annotation-config/>
+<!--    <context:component-scan base-package="org.harryng.communication" />-->
+    <context:component-scan base-package="org.harryng.communication.controller, org.harryng.communication.endpoint" />
 
     <import resource="classpath*:spring/common/*.xml" />
     <import resource="classpath*:spring/bean/*.xml" />

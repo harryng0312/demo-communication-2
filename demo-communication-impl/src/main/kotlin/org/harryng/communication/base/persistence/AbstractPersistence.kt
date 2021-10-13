@@ -7,13 +7,11 @@ import javax.persistence.PersistenceContext
 
 abstract class AbstractPersistence<Id : Serializable, T : BaseEntity<Id>>(override val entityClass: Class<T>) :
     BasePersistence<Id, T> {
+//    @Autowired
+//    @Qualifier("entityManagerFactory")
     @PersistenceContext(name = "primary")
     private lateinit var defaultEntityManager: EntityManager
-    override val entityManager: EntityManager = defaultEntityManager
-
-    fun getEntityManager(entityManagerName: String?): EntityManager? {
-        return null
-    }
+    override val entityManager: EntityManager get() = defaultEntityManager
 
     @Throws(RuntimeException::class, Exception::class)
     override fun selectById(id: Id): T? {

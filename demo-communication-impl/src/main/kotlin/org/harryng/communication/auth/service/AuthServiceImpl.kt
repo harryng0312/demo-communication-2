@@ -1,13 +1,11 @@
 package org.harryng.communication.auth.service
 
-
 import org.harryng.communication.user.entity.UserImpl
 import org.harryng.communication.user.service.UserService
 import org.harryng.communication.util.SecurityUtil
 import org.springframework.beans.factory.annotation.Autowired
 
-
-class AuthServiceImpl : AuthService {
+open class AuthServiceImpl : AuthService {
     @Autowired
     private lateinit var userService: UserService
 

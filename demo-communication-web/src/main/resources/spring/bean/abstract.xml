@@ -3,8 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- abstract classes -->
-    <bean abstract="true" class="org.harryng.communication.base.persistence.AbstractPersistence"/>
+    <bean abstract="true" class="org.harryng.communication.base.persistence.AbstractPersistence" />
+    <bean abstract="true" class="org.harryng.communication.base.persistence.AbstractSearchablePersistence" />
+
     <bean abstract="true" class="org.harryng.communication.base.service.AbstractService"/>
+    <bean abstract="true" class="org.harryng.communication.base.service.AbstractSearchableService"/>
 
     <!-- persistence config -->
     <!--    <jpa:repositories base-package="org.harryng.kotlin.demo.persistence"-->

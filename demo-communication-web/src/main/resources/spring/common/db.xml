@@ -18,32 +18,23 @@
     <!--    <bean id="dsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
     <!--        <property name="dataSource" ref="dataSource"/>-->
     <!--    </bean>-->
-    <!--    <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">-->
-    <!--        <constructor-arg name="dataSource" ref="dataSource"/>-->
-    <!--    </bean>-->
     <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           destroy-method="destroy">
         <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
         <property name="persistenceUnitName" value="primary"/>
         <property name="dataSource" ref="dataSource"/>
-<!--        <property name="validationMode" value="NONE" />-->
+        <!--        <property name="validationMode" value="NONE" />-->
         <!--        <property name="packagesToScan">-->
         <!--            <list>-->
-        <!--                <value>org.harryng.communication.**.entity</value>-->
+        <!--                <value>org.harryng.communication.base.persistence</value>-->
         <!--            </list>-->
         <!--        </property>-->
-        <!--        <property name="packagesToScan">-->
-        <!--            <list>-->
-        <!--                <value>org.harryng.kotlin.demo.**.persistence</value>-->
-        <!--            </list>-->
-        <!--        </property>-->
-
         <!--        <property name="jpaProperties">-->
         <!--            <props>-->
-        <!--&lt;!&ndash;                <prop key="showSql">true</prop>&ndash;&gt;-->
         <!--                <prop key="databasePlatform">org.eclipse.persistence.platform.database.H2Platform</prop>-->
         <!--            </props>-->
         <!--        </property>-->

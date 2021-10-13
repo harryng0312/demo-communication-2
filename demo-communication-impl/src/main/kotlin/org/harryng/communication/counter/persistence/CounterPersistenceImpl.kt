@@ -1,7 +1,7 @@
 package org.harryng.communication.counter.persistence
 
 import org.harryng.communication.counter.entity.CounterImpl
-import org.harryng.communication.kernel.CounterPersistence
+import org.harryng.communication.kernel.counter.CounterPersistence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.Cache

@@ -14,6 +14,7 @@ import java.io.Serializable
 open class UserServiceImpl : AbstractSearchableService<Long, UserImpl>(), UserService {
     @Autowired
     private lateinit var userPersistence: UserPersistence
+    
     override val persistence: BaseSearchablePersistence<Long, UserImpl>
         get() = userPersistence
 

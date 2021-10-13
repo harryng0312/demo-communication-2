@@ -14,7 +14,7 @@
         <attributes>
             <id name="id">
                 <column name="id_"/>
-                <!-- 				<generated-value strategy="TABLE" generator="seq_default" /> -->
+                <!-- <generated-value strategy="TABLE" generator="seq_default" /> -->
                 <!-- <table-generator name="seq_default" allocation-size="1" -->
                 <!-- initial-value="1" table="counter" pk-column-name="id" -->
                 <!-- pk-column-value="default_id" value-column-name="count" /> -->
@@ -37,5 +37,6 @@
             </basic>
         </attributes>
     </mapped-superclass>
+
     <converter class="org.harryng.communication.util.persistence.AtomicLongConverter" auto-apply="true"/>
 </entity-mappings>

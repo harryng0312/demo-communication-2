@@ -1,12 +1,12 @@
 package org.harryng.communication.counter.service
 
 import org.harryng.communication.counter.entity.CounterImpl
-import org.harryng.communication.kernel.CounterPersistence
+import org.harryng.communication.kernel.counter.CounterPersistence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import kotlin.jvm.Throws
 
-class CounterServiceImpl : CounterService {
+open class CounterServiceImpl : CounterService {
 
     @Autowired
 //    @Qualifier("counterPersistence")

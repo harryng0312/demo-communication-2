@@ -47,7 +47,9 @@ dependencies {
     implementation "org.apache.commons:commons-dbcp2:${apacheCommonVersion}"
     implementation "org.apache.commons:commons-pool2:${apacheCommonVersion}"
 
-    implementation "javax.servlet:jstl:${jstlVersion}"
+//    implementation "org.hibernate:hibernate-core:${hibernateVer}"
+
+//    implementation "javax.servlet:jstl:${jstlVersion}"
     implementation "org.aspectj:aspectjrt:${aspectjVersion}"
     implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
 
@@ -55,7 +57,7 @@ dependencies {
 //    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJoseVersion}"
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation "org.keycloak:keycloak-servlet-filter-adapter:${keycloakVer}"
     implementation "org.keycloak:keycloak-installed-adapter:${keycloakVer}"
 
@@ -81,7 +83,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
-    // testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"
+    testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"
 
     // for base gRPC
     implementation "io.grpc:grpc-netty:${grpcVer}"

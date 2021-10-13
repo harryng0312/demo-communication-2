@@ -1,4 +1,4 @@
-package org.harryng.communication.kernel
+package org.harryng.communication.kernel.counter
 
 import org.harryng.communication.counter.entity.CounterImpl
 import kotlin.jvm.Throws
