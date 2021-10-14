@@ -52,6 +52,7 @@ open class AuthController {
             SessionHolder.getSession(authenticationInfo?.username ?: "")
                 ?.let { it[SessionHolder.K_AUTH_INFO] = authenticationInfo }
             response = TextUtil.objToJson(authenticationInfo)
+            request.setAttribute("user", user)
         } catch (e: Exception) {
             val authenticationInfoErr =
                 AuthenticationInfo("0", "", "", Calendar.getInstance().time, "10")

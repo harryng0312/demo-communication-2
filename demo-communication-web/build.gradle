@@ -49,7 +49,7 @@ dependencies {
 
 //    implementation "org.hibernate:hibernate-core:${hibernateVer}"
 
-//    implementation "javax.servlet:jstl:${jstlVersion}"
+    implementation "javax.servlet:jstl:${jstlVersion}"
     implementation "org.aspectj:aspectjrt:${aspectjVersion}"
     implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
 
