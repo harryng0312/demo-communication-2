@@ -21,11 +21,11 @@ open class UserServiceImpl : AbstractSearchableService<Long, UserImpl>(), UserSe
     @Throws(RuntimeException::class, Exception::class)
     override fun getByUsername(username: String): UserImpl? {
         var result: UserImpl? = null
-        val pageInfo = PageRequest.of(0, 5, Sort.Direction.ASC)
-        val jpql = "select u from ${UserImpl::class.qualifiedName} u where username = :username"
+        val pageInfo = PageRequest.of(0, 5, Sort.Direction.ASC, "id")
+        val jpql = "select u from ${UserImpl::class.qualifiedName} u where u.username = :username"
         val params = mapOf<String, Serializable>("username" to username)
         val pageResult: Page<UserImpl> = findByConditions(jpql, params, pageInfo)
-        if (pageResult.size > 0) {
+        if (!pageResult.isEmpty) {
             result = pageResult.first()
         }
         return result

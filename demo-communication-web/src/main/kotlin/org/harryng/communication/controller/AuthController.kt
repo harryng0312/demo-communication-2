@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import org.harryng.communication.auth.service.AuthService
 import org.harryng.communication.auth.dto.AuthenticationInfo
 import org.harryng.communication.session.SessionHolder
+import org.harryng.communication.user.entity.UserImpl
 import org.harryng.communication.util.TextUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -52,7 +53,6 @@ open class AuthController {
             SessionHolder.getSession(authenticationInfo?.username ?: "")
                 ?.let { it[SessionHolder.K_AUTH_INFO] = authenticationInfo }
             response = TextUtil.objToJson(authenticationInfo)
-            request.setAttribute("user", user)
         } catch (e: Exception) {
             val authenticationInfoErr =
                 AuthenticationInfo("0", "", "", Calendar.getInstance().time, "10")
@@ -71,6 +71,7 @@ open class AuthController {
         var rs = "auth/login"
         val result = SessionHolder.getSession(tokenId ?: "", false) != null
         if (result) {
+            request.setAttribute("user", tokenId?.let { SessionHolder.getSession(it) }!![SessionHolder.K_USER])
             rs = String.format("redirect:%s", "welcome")
         }
         return rs

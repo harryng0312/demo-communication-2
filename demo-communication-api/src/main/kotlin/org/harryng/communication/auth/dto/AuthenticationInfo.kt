@@ -8,16 +8,27 @@ import java.util.*
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder(value = [
-    "id",
-    "username",
-    "password",
-    "requestTime",
-    "result"
-])
-data class AuthenticationInfo (@JsonProperty("id") var id:String,
-                               @JsonProperty("username") var username:String,
-                               @JsonProperty("password") var password:String,
-                               @JsonProperty("requestTime") var requestTime: Date,
-                               @JsonProperty("result") var result:String) : Serializable {
+@JsonPropertyOrder(
+    value = [
+        "id",
+        "username",
+        "password",
+        "requestTime",
+        "result"
+    ]
+)
+open class AuthenticationInfo(
+    @JsonProperty("id") open var id: String? = "",
+    @JsonProperty("username") open var username: String? = "",
+    @JsonProperty("password") open var password: String? = "",
+    @JsonProperty("requestTime") open var requestTime: Date? = Calendar.getInstance().time,
+    @JsonProperty("result") open var result: String? = ""
+) : Serializable {
+//    constructor() : this(
+//        id="",
+//        username = "",
+//        password = "",
+//        requestTime = Calendar.getInstance().time,
+//        result = ""
+//    )
 }

@@ -36,7 +36,7 @@ object PersistenceUtil {
         val typedQuery: TypedQuery<T> = entityManager.createQuery(queryJpql, returnType)
         typedQuery.lockMode = lockModeType
         typedQuery.firstResult = pageInfo.pageNumber * pageInfo.pageSize
-        typedQuery.maxResults = pageInfo.pageNumber
+        typedQuery.maxResults = pageInfo.pageSize
         params.forEach { item ->
             typedQuery.setParameter(item.key, item.value)
         }
