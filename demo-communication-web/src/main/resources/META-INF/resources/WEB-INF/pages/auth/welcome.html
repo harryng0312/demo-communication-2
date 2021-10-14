@@ -13,7 +13,7 @@
 
 <body>
     <div class="center">
-        Welcome <span th:text="${(user!=null)?user.screenName:''}"></span>
+        Welcome <span th:text="${user!=null}?${user.screenName}:''"></span>
     </div>
 </body>
 
