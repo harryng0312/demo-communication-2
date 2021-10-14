@@ -24,17 +24,26 @@
 <!--    <bean id="keycloakOIDCFilter" class="org.keycloak.adapters.servlet.KeycloakOIDCFilter" />-->
 <!--    <bean class="org.harryng.demo.config.WebAppInitializer"/>-->
 <!--    <mvc:resources mapping="/**" location="/" />-->
+
 <!--    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
 <!--        <constructor-arg name="prefix" value="/WEB-INF/pages/html"/>-->
 <!--        <constructor-arg name="suffix" value=".html"/>-->
 <!--        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />-->
 <!--    </bean>-->
 
-    <bean id="resourceTemplateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
-<!--        <property name="applicationContext" ref="#{webApplicationContext}"/>-->
+<!--    <bean id="resourceTemplateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">-->
+<!--        <property name="templateMode" value="html"/>-->
+<!--        <property name="prefix" value="/WEB-INF/pages/"/>-->
+<!--        <property name="suffix" value=".html"/>-->
+<!--        <property name="characterEncoding" value="utf-8"/>-->
+<!--        <property name="cacheable" value="true"/>-->
+<!--    </bean>-->
+    <bean id="resourceTemplateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
         <property name="templateMode" value="html"/>
-        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="prefix" value="/META-INF/resources/WEB-INF/pages/"/>
         <property name="suffix" value=".html"/>
+        <property name="characterEncoding" value="utf-8"/>
+        <property name="cacheable" value="true"/>
     </bean>
     <bean id="springTemplateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
         <property name="enableSpringELCompiler" value="true"/>
@@ -44,7 +53,7 @@
             </set>
         </property>
     </bean>
-    <bean id="thymeleafViewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+    <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
         <property name="characterEncoding" value="utf-8"/>
         <property name="templateEngine" ref="springTemplateEngine"/>
     </bean>
