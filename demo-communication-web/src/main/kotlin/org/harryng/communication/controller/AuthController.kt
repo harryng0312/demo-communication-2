@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import org.harryng.communication.auth.service.AuthService
 import org.harryng.communication.auth.dto.AuthenticationInfo
 import org.harryng.communication.session.SessionHolder
+import org.harryng.communication.user.entity.UserImpl
 import org.harryng.communication.util.TextUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -25,8 +26,10 @@ open class AuthController {
 
     @Autowired
     protected lateinit var request: HttpServletRequest
+
     @Autowired
     protected lateinit var response: HttpServletResponse
+
     @Autowired
     protected lateinit var authService: AuthService
 
@@ -37,9 +40,10 @@ open class AuthController {
 
     @RequestMapping(value = ["/logout"], method = [RequestMethod.GET])
     fun logout(): String {
-        val tokenCookie: Cookie = (request.cookies?.find { cookie -> cookie.name == "tokenId" }) ?: Cookie("tokenId", "")
+        val tokenCookie: Cookie =
+            (request.cookies?.find { cookie -> cookie.name == "tokenId" }) ?: Cookie("tokenId", "")
+        request.session.removeAttribute(tokenCookie.value)
         request.session.invalidate()
-        SessionHolder.invalidateSession(tokenCookie.value)
         tokenCookie.maxAge = 0
         response.addCookie(tokenCookie)
         return "redirect:/login"
@@ -53,24 +57,28 @@ open class AuthController {
     )
     @ResponseBody
     fun doLogin(@RequestBody body: String): String {
-        var response = ""
+        var responseRs = ""
         try {
             val authenticationInfo: AuthenticationInfo? = TextUtil.jsonToObj(AuthenticationInfo::class.java, body)
             val username: String = authenticationInfo?.username ?: ""
             val password: String = authenticationInfo?.password ?: ""
             request.session.invalidate()
-            val user = authService.loginByUsernamePassword(username, password)
+            val user: UserImpl = authService.loginByUsernamePassword(username, password)
             authenticationInfo?.let { it.result = "0" }
-            SessionHolder.getSession(authenticationInfo?.username ?: "")
-                ?.let { it[SessionHolder.K_USER] = user }
-            SessionHolder.getSession(authenticationInfo?.username ?: "")
-                ?.let { it[SessionHolder.K_AUTH_INFO] = authenticationInfo }
-            response = TextUtil.objToJson(authenticationInfo)
+//            SessionHolder.getSession(authenticationInfo?.username ?: "")
+//                ?.let { it[SessionHolder.K_USER] = user }
+//            SessionHolder.getSession(authenticationInfo?.username ?: "")
+//                ?.let { it[SessionHolder.K_AUTH_INFO] = authenticationInfo }
+            request.session.setAttribute(SessionHolder.K_USER, user)
+            request.session.setAttribute(SessionHolder.K_AUTH_INFO, authenticationInfo)
+//            request.session.setAttribute(SessionHolder.K_TOKEN_ID, username)
+            response.addCookie(Cookie(SessionHolder.K_TOKEN_ID, username))
+            responseRs = TextUtil.objToJson(authenticationInfo)
         } catch (e: Exception) {
             val authenticationInfoErr =
                 AuthenticationInfo("0", "", "", Calendar.getInstance().time, "10")
             try {
-                response = TextUtil.objToJson(authenticationInfoErr)
+                responseRs = TextUtil.objToJson(authenticationInfoErr)
             } catch (ex: JsonProcessingException) {
                 logger.info("", ex)
             }
@@ -78,17 +86,19 @@ open class AuthController {
         } finally {
 
         }
-        return response
+        return responseRs
     }
 
     @RequestMapping(value = ["/afterLogin"], method = [RequestMethod.GET])
-    fun submitLogin(@RequestParam(name = "tokenId", defaultValue = "") tokenId: String = ""): String {
+    fun afterLogin(@RequestParam(name = SessionHolder.K_TOKEN_ID, defaultValue = "") tokenId: String = ""): String {
         var rs = "auth/login"
         var tid = tokenId
-        if("" == tid){
-            tid = (request.cookies.find { cookie -> cookie.name == "tokenId" } ?: Cookie("", "")).value
+        if ("" == tid) {
+            tid = (request.cookies.find { cookie -> cookie.name == SessionHolder.K_TOKEN_ID }
+                ?: Cookie(SessionHolder.K_TOKEN_ID, "")).value
         }
-        val result = SessionHolder.getSession(tid, false) != null
+//        val result = SessionHolder.getSession(tid, false) != null
+        val result = request.session.getAttribute(SessionHolder.K_USER) != null
         if (result) {
             rs = String.format("redirect:%s", "welcome")
         }
@@ -98,13 +108,11 @@ open class AuthController {
     @RequestMapping(value = ["/welcome"], method = [RequestMethod.GET])
     fun welcome(): String {
         var rs = "redirect:/logout"
-        val tokenId = request.cookies?.find { cookie -> cookie.name == "tokenId" }
-        if (tokenId != null && SessionHolder.getSession(tokenId.value) != null) {
-            request.setAttribute("user", SessionHolder.getSession(tokenId.value)!![SessionHolder.K_USER])
+        val tokenId = request.cookies?.find { cookie -> cookie.name == SessionHolder.K_TOKEN_ID }
+        if (tokenId != null) {
+            request.setAttribute("user", request.session.getAttribute(SessionHolder.K_USER))
             rs = "auth/welcome"
         }
         return rs
     }
-
-
 }

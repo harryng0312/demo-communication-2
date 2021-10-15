@@ -10,7 +10,7 @@ open class AuthServiceImpl : AuthService {
     private lateinit var userService: UserService
 
     @Throws(RuntimeException::class, Exception::class)
-    override fun loginByUsernamePassword(username: String, password: String): UserImpl? {
+    override fun loginByUsernamePassword(username: String, password: String): UserImpl {
         val user: UserImpl? = userService.getByUsername(username)
         if ("" == password) {
             throw Exception("Password is not valid")

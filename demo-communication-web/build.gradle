@@ -17,10 +17,12 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
-
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.session:spring-session-bom:2021.0.2'
+    }
+}
 dependencies {
-
-
     implementation project(":demo-communication-api")
     implementation project(":demo-communication-impl")
 
@@ -40,6 +42,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-log4j2:${springbootVersion}"
 
+    implementation "org.springframework.session:spring-session-jdbc:${springSessionVersion}"
 
     implementation "org.apache.commons:commons-dbcp2:${apacheCommonVersion}"
     implementation "org.apache.commons:commons-pool2:${apacheCommonVersion}"

@@ -53,11 +53,11 @@
                 Authenticator.loginByUnamePasswd($('#txtUsername').val(), $('#txtPassword').val(), function(result) {
                     if (result) {
                         let uname = $('#txtUsername').val().trim();
-                        let expDate = new Date();
-                        expDate.setTime(expDate.getTime() + (15 * 60 * 1000));
-                        let expires = "; expires=" + expDate.toUTCString();
+                        // let expDate = new Date();
+                        // expDate.setTime(expDate.getTime() + (15 * 60 * 1000));
+                        // let expires = "; expires=" + expDate.toUTCString();
                         // document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname) + expires ;//+ "; path="+contextRoot;
-                        document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname)
+                        // document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname)
                         $(location).prop('href', 'afterLogin');
                     }
                 });
