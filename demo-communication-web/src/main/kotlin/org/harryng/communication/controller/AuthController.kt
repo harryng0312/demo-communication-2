@@ -70,7 +70,7 @@ open class AuthController {
 //            SessionHolder.getSession(authenticationInfo?.username ?: "")
 //                ?.let { it[SessionHolder.K_AUTH_INFO] = authenticationInfo }
             request.session.setAttribute(SessionHolder.K_USER, user)
-            request.session.setAttribute(SessionHolder.K_AUTH_INFO, authenticationInfo)
+//            request.session.setAttribute(SessionHolder.K_AUTH_INFO, authenticationInfo)
 //            request.session.setAttribute(SessionHolder.K_TOKEN_ID, username)
             response.addCookie(Cookie(SessionHolder.K_TOKEN_ID, username))
             responseRs = TextUtil.objToJson(authenticationInfo)
