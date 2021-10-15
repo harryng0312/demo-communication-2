@@ -9,6 +9,6 @@
 **/.settings/
 
 gradle/
-db/
+/db/
 logs/
 .project
