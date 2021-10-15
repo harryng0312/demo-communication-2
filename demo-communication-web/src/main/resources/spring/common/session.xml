@@ -3,10 +3,30 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd ">
 
-    <bean class="org.springframework.boot.autoconfigure.session.JdbcSessionConfiguration$SpringBootJdbcHttpSessionConfiguration"/>
+    <import resource="common.xml"/>
 
-    <bean class="org.springframework.session.web.http.DefaultCookieSerializer">
+    <bean id="sessionDataSource" primary="true" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${session.db.driver}"/>
+        <property name="url" value="${session.db.url}"/>
+        <property name="username" value="${session.db.username}"/>
+        <property name="password" value="${session.db.password}"/>
+        <property name="initialSize" value="${session.db.minPoolSize}"/>
+        <property name="maxTotal" value="${session.db.maxPoolSize}"/>
+    </bean>
+    <bean id="sessionTransactionManager" primary="true" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="sessionDataSource"/>
+    </bean>
+
+    <bean id="sessionCookieSerializer" class="org.springframework.session.web.http.DefaultCookieSerializer">
         <property name="cookieName" value="sessionId"/>
+    </bean>
+
+    <bean primary="true" class="org.springframework.session.jdbc.config.annotation.web.http.JdbcHttpSessionConfiguration">
+        <property name="maxInactiveIntervalInSeconds" value="300"/>
+        <property name="cleanupCron" value="0 * * * * *"/>
+        <property name="tableName" value="HTTP_SESSION"/>
+        <property name="cookieSerializer" ref="sessionCookieSerializer"/>
+        <property name="transactionManager" ref="sessionTransactionManager"/>
     </bean>
 
 </beans>
