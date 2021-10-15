@@ -1,44 +1,30 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{../layout/main-layout :: main-fragment(
-        ~{::title},
+      th:replace="~{../layout/main-layout :: main-fragment(
+        ~{:: title},
         ~{:: #home-static-resources},
         ~{:: #home-header},
         ~{:: #home-nav},
         ~{:: #home-main-content},
         ~{:: #home-footer}
     )}">
-
 <head>
     <title>Welcome</title>
-    <style>
-        .center {
-            max-width: 600px;
-            margin: auto;
-        }
-    </style>
     <th:block id="home-static-resources">
-        <script type="text/javascript" th:src="@{/js/auth.js}"></script>
-        <link rel="stylesheet" type="text/css" th:href="@{/js/welcome.css}"/>
+        <style>
+            .center {
+                max-width: 600px;
+                margin: auto;
+            }
+        </style>
     </th:block>
 </head>
-
 <body>
-    <div id="home-header">
-        Header of Home Page
-    </div>
-    <div id="home-nav" th:replace="~{../fragment/app-fragments :: nav-default}">
-        Home Nav
-    </div>
-    <div id="home-main-content">
-        <h2>Home content</h2>
-        <div>Content of Home Page</div>
-        Welcome <span th:text="${user!=null}?${user.screenName}:''"></span>
-    </div>
-    <div id="home-footer" th:replace="~{../fragment/app-fragments :: copyright}">
-        Footer
-    </div>
+<div id="home-main-content" class="center">
+    <h2>Home content</h2>
+    <div>Content of Home Page</div>
+    Welcome <span th:text="${user!=null}?${user.screenName}:''"></span>
+</div>
 </body>
-
 </html>

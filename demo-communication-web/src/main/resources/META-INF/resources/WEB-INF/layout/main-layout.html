@@ -2,18 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:fragment="main-fragment (title, otherStaticResources, header, nav, mainContent, footer)">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title th:replace="${title}">Page 1 Title</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+    <th:block th:replace="~{../fragment/app-fragment :: default-home-static-resources}"/>
     <!-- Other javascript, css source files -->
-    <th:block th:replace="${otherStaticResources!=null} ?${otherStaticResources}: ~{}"></th:block>
+    <th:block th:replace="${otherStaticResources!=null} ?${otherStaticResources}: ~{}"/>
 </head>
 <body>
-<header th:insert="${header!=null}?${header}: ~{}">
-    <h2>Page 1</h2>
+<header th:insert="${header!=null}?${header}: ~{../fragment/app-fragment :: home-header}">
 </header>
 <section>
-    <nav th:insert="${nav!=null}?${nav}: ~{}">
+    <nav th:insert="${nav!=null}?${nav}: ~{../fragment/nav-fragment :: nav-default}">
         <ul>
             <li><a href="#">Page 1</a></li>
             <li><a href="#">Page 2</a></li>
@@ -24,7 +23,7 @@
         <p>Main content of Page 1</p>
     </article>
 </section>
-<footer th:insert="${footer!=null}?${footer}: ~{}">
+<footer th:insert="${footer!=null}?${footer}: ~{../fragment/app-fragment :: copyright}">
     <p>Footer</p>
 </footer>
 </body>
