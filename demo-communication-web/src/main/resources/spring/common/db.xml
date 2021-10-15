@@ -15,9 +15,9 @@
         <property name="maxTotal" value="${db.maxPoolSize}"/>
         <property name="maxOpenPreparedStatements" value="5"/>
     </bean>
-    <!--    <bean id="dsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
-    <!--        <property name="dataSource" ref="dataSource"/>-->
-    <!--    </bean>-->
+    <bean id="dsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
     <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
@@ -48,7 +48,7 @@
             <map>
                 <entry key="showSql" value="${jpa.showSql}"/>
                 <entry key="hibernate.dialect" value="${jpa.dialect}"/>
-<!--                <entry key="hibernate.hbm2ddl.auto" value="update"/>-->
+                <!--                <entry key="hibernate.hbm2ddl.auto" value="update"/>-->
             </map>
         </property>
         <property name="loadTimeWeaver">
