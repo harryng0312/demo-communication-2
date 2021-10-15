@@ -5,4 +5,8 @@
 
     <bean class="org.springframework.boot.autoconfigure.session.JdbcSessionConfiguration$SpringBootJdbcHttpSessionConfiguration"/>
 
+    <bean class="org.springframework.session.web.http.DefaultCookieSerializer">
+        <property name="cookieName" value="sessionId"/>
+    </bean>
+
 </beans>
