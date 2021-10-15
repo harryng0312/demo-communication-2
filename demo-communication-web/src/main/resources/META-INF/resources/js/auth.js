@@ -1,15 +1,17 @@
-var Authenticator = {
+let Authenticator = {
     loginByUnamePasswd: function (uname, passwd, callback) {
-        var data = {
+        let data = {
             username: uname,
             password: passwd
         };
-        var success = function (data) {
-            var result = (data.result === "0");
-            alert("Login result:" + result);
+        let success = function (data) {
+            let result = (data.result === "0");
+            if(!result) {
+                alert("Login result:" + result);
+            }
             callback(result);
         };
-        var error = function (err) {
+        let error = function (err) {
             alert(err);
             console.log("Error:" + err);
             callback(false);

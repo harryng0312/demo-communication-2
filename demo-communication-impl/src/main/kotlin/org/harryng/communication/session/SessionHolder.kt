@@ -17,4 +17,13 @@ object SessionHolder {
     fun getSession(key: String): MutableMap<String, Any?>? {
         return getSession(key, true)
     }
+
+    fun invalidateSession(key: String): Boolean {
+        var rs = true
+        if(sessionMap.contains(key)){
+            sessionMap[key]?.clear()
+            rs = (sessionMap.remove(key) != null)
+        }
+        return rs
+    }
 }
