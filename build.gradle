@@ -11,9 +11,13 @@ allprojects {
         mavenCentral()
         mavenLocal()
     }
+    configurations.implementation {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
     dependencies {
         implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVer}"
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVer}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     }

@@ -13,10 +13,6 @@ repositories {
 dependencies {
     implementation project(":demo-communication-api")
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVer}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-
     implementation "org.springframework:spring-context:${springVersion}"
     implementation "org.springframework:spring-beans:${springVersion}"
     implementation "javax.persistence:javax.persistence-api:2.2"

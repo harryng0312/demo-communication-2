@@ -19,9 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVer}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+
 
     implementation project(":demo-communication-api")
     implementation project(":demo-communication-impl")
@@ -32,7 +30,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jdbc:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springbootVersion}"
 
-    // implementation "org.springframework.boot:spring-boot-starter-integration:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-integration:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web-services:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf:${springbootVersion}"
@@ -40,14 +38,11 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-websocket:${springbootVersion}"
 
     implementation "org.springframework.boot:spring-boot-starter-validation:${springbootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-log4j2:${springbootVersion}"
 
-//    implementation "org.springframework.security:spring-security-web:${springVersion}"
-//    implementation "org.springframework.security:spring-security-config:${springVersion}"
 
     implementation "org.apache.commons:commons-dbcp2:${apacheCommonVersion}"
     implementation "org.apache.commons:commons-pool2:${apacheCommonVersion}"
-
-//    implementation "org.hibernate:hibernate-core:${hibernateVer}"
 
     implementation "javax.servlet:jstl:${jstlVersion}"
     implementation "org.aspectj:aspectjrt:${aspectjVersion}"
@@ -61,14 +56,8 @@ dependencies {
     implementation "org.keycloak:keycloak-servlet-filter-adapter:${keycloakVer}"
     implementation "org.keycloak:keycloak-installed-adapter:${keycloakVer}"
 
-//    implementation "org.springframework:spring-core:${springVersion}"
-//    implementation "org.springframework:spring-context:${springVersion}"
-//    implementation "org.springframework:spring-context-support:${springVersion}"
-
     implementation "com.h2database:h2:${h2Version}"
     implementation "org.postgresql:postgresql:${pgsqlVersion}"
-
-//    implementation "org.springframework:spring-websocket:${springVersion}"
 
     // for war
 //    providedRuntime "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
