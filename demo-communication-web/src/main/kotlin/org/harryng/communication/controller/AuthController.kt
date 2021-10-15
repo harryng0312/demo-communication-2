@@ -108,7 +108,7 @@ open class AuthController {
     @RequestMapping(value = ["/welcome"], method = [RequestMethod.GET])
     fun welcome(): String {
         var rs = "redirect:/logout"
-        val tokenId = request.cookies?.find { cookie -> cookie.name == SessionHolder.K_TOKEN_ID }
+        val tokenId = request.session.getAttribute(SessionHolder.K_USER)
         if (tokenId != null) {
             request.setAttribute("user", request.session.getAttribute(SessionHolder.K_USER))
             rs = "auth/welcome"
