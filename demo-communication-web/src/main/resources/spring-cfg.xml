@@ -10,7 +10,7 @@
     <mvc:annotation-driven/>
     <context:annotation-config/>
     <!--    <context:component-scan base-package="org.harryng.communication" />-->
-    <!--    <context:component-scan base-package="org.harryng.communication.controller, org.harryng.communication.endpoint" />-->
+    <context:component-scan base-package="org.harryng.communication.controller, org.harryng.communication.endpoint"/>
 
     <import resource="classpath*:spring/common/*.xml"/>
     <import resource="classpath*:spring/bean/*.xml"/>
