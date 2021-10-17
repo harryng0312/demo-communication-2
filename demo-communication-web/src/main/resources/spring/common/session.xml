@@ -3,7 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd ">
 
-    <bean class="org.springframework.boot.autoconfigure.session.JdbcSessionConfiguration$SpringBootJdbcHttpSessionConfiguration"/>
+<!--    <bean class="org.springframework.boot.autoconfigure.session.JdbcSessionConfiguration$SpringBootJdbcHttpSessionConfiguration"/>-->
+
+    <bean class="org.springframework.boot.autoconfigure.session.JdbcSessionProperties">
+        <property name="tableName" value="HTTP_SESSION"/>
+        <property name="cleanupCron" value="0 * * * * *"/>
+    </bean>
 
     <bean class="org.springframework.session.web.http.DefaultCookieSerializer">
         <property name="cookieName" value="sessionId"/>
