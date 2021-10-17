@@ -19,6 +19,7 @@
 
     <bean id="sessionCookieSerializer" class="org.springframework.session.web.http.DefaultCookieSerializer">
         <property name="cookieName" value="sessionId"/>
+        <property name="useBase64Encoding" value="true"/>
     </bean>
 
     <bean primary="true" class="org.springframework.session.jdbc.config.annotation.web.http.JdbcHttpSessionConfiguration">
