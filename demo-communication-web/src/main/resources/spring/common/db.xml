@@ -6,27 +6,24 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
     <tx:annotation-driven transaction-manager="defaultTransactionManager" mode="aspectj"/>
     <import resource="common.xml"/>
-    <bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
+    <bean id="defaultDataSource" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="${db.driver}"/>
         <property name="url" value="${db.url}"/>
         <property name="username" value="${db.username}"/>
         <property name="password" value="${db.password}"/>
         <property name="initialSize" value="${db.minPoolSize}"/>
         <property name="maxTotal" value="${db.maxPoolSize}"/>
-        <property name="maxOpenPreparedStatements" value="5"/>
     </bean>
-    <!--    <bean id="dsTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
-    <!--        <property name="dataSource" ref="dataSource"/>-->
-    <!--    </bean>-->
+
     <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-        <constructor-arg name="dataSource" ref="dataSource"/>
+        <constructor-arg name="dataSource" ref="defaultDataSource"/>
     </bean>
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           destroy-method="destroy">
         <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
         <property name="persistenceUnitName" value="primary"/>
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="defaultDataSource"/>
         <!--        <property name="validationMode" value="NONE" />-->
         <!--        <property name="packagesToScan">-->
         <!--            <list>-->
