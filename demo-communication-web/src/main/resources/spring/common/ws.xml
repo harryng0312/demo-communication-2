@@ -13,7 +13,7 @@
 
     <bean id="webRtcChatHandler" class="org.harryng.communication.endpoint.WebRtcChatHandler"/>
 
-    <bean id="fileUploadHandler" class="org.harryng.communication.endpoint.FileUploadHandler" />
+    <bean id="fileUploadHandler" class="org.harryng.communication.endpoint.FileUploadHandler"/>
 
     <websocket:handlers>
         <websocket:mapping path="ws/chat-handler" handler="httpChatHandler"/>
@@ -23,7 +23,7 @@
     </websocket:handlers>
 
     <websocket:handlers allowed-origins="*">
-        <websocket:mapping path="ws/socket" handler="webRtcChatHandler" />
+        <websocket:mapping path="ws/socket" handler="webRtcChatHandler"/>
     </websocket:handlers>
 
     <websocket:handlers>
@@ -31,12 +31,14 @@
     </websocket:handlers>
 
     <websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">
-        <websocket:stomp-endpoint path="/ws/chat" allowed-origins="*"/>
-        <websocket:stomp-endpoint path="/ws/chat" allowed-origins="*">
+        <websocket:stomp-endpoint path="/ws/chat"
+                                  allowed-origin-patterns="${server.servlet.context-path}"/>
+        <websocket:stomp-endpoint path="/ws/chat"
+                                  allowed-origin-patterns="${server.servlet.context-path}">
             <websocket:sockjs websocket-enabled="true" heartbeat-time="20000"/>
         </websocket:stomp-endpoint>
-        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origins="*"/>
-        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origins="*">
+        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origin-patterns="/"/>
+        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origin-patterns="/">
             <websocket:sockjs websocket-enabled="true" heartbeat-time="20000"/>
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/topic, /queue"/>

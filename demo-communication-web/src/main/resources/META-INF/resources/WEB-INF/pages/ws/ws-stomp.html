@@ -1,21 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: harryng
-  Date: 4/22/20
-  Time: 22:45
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Web Socket STOMP chat</title>
-    <%--    <link href="<c:url value='/css/socketio.css'/>" rel="stylesheet" type="text/css"/>--%>
-    <script src="<c:url value='/js/jquery-3.4.1.min.js'/>"></script>
-    <script src="<c:url value='/js/sockjs.min.js'/>"></script>
-    <script src="<c:url value='/js/stomp.min.js'/>"></script>
-    <%--    <script src="<c:url value='/js/socket.io.js'/>"></script>--%>
+<!--    <link href="<c:url value='/css/socketio.css'/>" rel="stylesheet" type="text/css"/>-->
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+<!--    <script src="<c:url value='/js/socket.io.js'/>"></script>-->
 </head>
 <body onload="disconnect()">
 <div>

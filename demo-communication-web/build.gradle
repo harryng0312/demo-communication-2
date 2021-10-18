@@ -62,17 +62,14 @@ dependencies {
     implementation "com.h2database:h2:${h2Version}"
     implementation "org.postgresql:postgresql:${pgsqlVersion}"
 
-    // for war
-//    providedRuntime "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-//    providedRuntime "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-//    providedRuntime "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-//    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
+    // tomcat
+//    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+//    implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+//    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+//    implementation "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
 
-    // for jar
-    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-    implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
+    // jetty
+    implementation "org.springframework.boot:spring-boot-starter-jetty:${springbootVersion}"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
     testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"

@@ -50,7 +50,8 @@ open class AuthController {
     fun logout(): String {
         val tokenCookie: Cookie = request.cookies?.find { cookie -> cookie.name == "tokenId" }
             ?: Cookie("tokenId", "")
-        authService.logout(request.session.getAttribute(SessionHolder.K_USER_ID) as Long)
+        val userId = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
+        authService.logout(userId?:0L)
         request.session.removeAttribute(SessionHolder.K_USER_ID)
         request.session.invalidate()
         tokenCookie.maxAge = 0
