@@ -17,7 +17,7 @@ open class AuthServiceImpl : AuthService {
     @Autowired
     @Qualifier("cacheManager")
     private lateinit var cacheManager: CacheManager
-    protected val cache: Cache get() = cacheManager.getCache("session")
+    protected val cache: Cache get() = cacheManager.getCache("session")!!
 
     @Throws(RuntimeException::class, Exception::class)
     override fun loginByUsernamePassword(username: String, password: String): UserImpl {
@@ -34,7 +34,7 @@ open class AuthServiceImpl : AuthService {
                 inputHashedPasswd = String(inputHashedPasswdBin)
             }
             if (inputHashedPasswd == user.passwd) {
-                cache.putIfAbsent(user.id, user)
+                cache.putIfAbsent(user.id, SessionHolder.createInstance(user))
             }else{
                 throw Exception("Password is not matched")
             }

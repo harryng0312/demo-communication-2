@@ -36,7 +36,10 @@ open class AuthController {
     @Autowired
     protected lateinit var authService: AuthService
 
-
+    @Autowired
+    @Qualifier("cacheManager")
+    private lateinit var cacheManager: CacheManager
+    protected val cache: Cache get() = cacheManager.getCache("session")!!
 
     @RequestMapping(value = ["/login"], method = [RequestMethod.GET])
     fun initLogin(): String {
@@ -108,10 +111,13 @@ open class AuthController {
     @RequestMapping(value = ["/welcome"], method = [RequestMethod.GET])
     fun welcome(): String {
         var rs = "redirect:/logout"
-        val tokenId = request.session.getAttribute(SessionHolder.K_USER_ID)
-        if (tokenId != null) {
-            request.setAttribute("user", request.session.getAttribute(SessionHolder.K_USER_ID))
-            rs = "auth/welcome"
+        val userId = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
+        if (userId != null) {
+            val session = cache.get(userId, SessionHolder::class.java)
+            if(session!=null) {
+                request.setAttribute("user", session.user)
+                rs = "auth/welcome"
+            }
         }
         return rs
     }
