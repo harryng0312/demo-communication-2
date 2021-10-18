@@ -1,5 +1,6 @@
 package org.harryng.communication.auth.service
 
+import org.harryng.communication.kernel.cache.CacheService
 import org.harryng.communication.user.entity.UserImpl
 import org.harryng.communication.user.service.UserService
 import org.harryng.communication.util.SecurityUtil
@@ -15,9 +16,8 @@ open class AuthServiceImpl : AuthService {
     private lateinit var userService: UserService
 
     @Autowired
-    @Qualifier("cacheManager")
-    private lateinit var cacheManager: CacheManager
-    protected val cache: Cache get() = cacheManager.getCache("session")!!
+    @Qualifier("cacheService")
+    private lateinit var cacheService: CacheService
 
     @Throws(RuntimeException::class, Exception::class)
     override fun loginByUsernamePassword(username: String, password: String): UserImpl {
@@ -34,8 +34,11 @@ open class AuthServiceImpl : AuthService {
                 inputHashedPasswd = String(inputHashedPasswdBin)
             }
             if (inputHashedPasswd == user.passwd) {
-                cache.putIfAbsent(user.id, SessionHolder.createInstance(user))
-            }else{
+                cacheService.getSession().putIfAbsent(
+                    user.id,
+                    mutableMapOf(SessionHolder.K_SESSION_HOLDER to SessionHolder.createInstance(user))
+                )
+            } else {
                 throw Exception("Password is not matched")
             }
         } else {
@@ -45,6 +48,6 @@ open class AuthServiceImpl : AuthService {
     }
 
     override fun logout(userId: Long) {
-        cache.evictIfPresent(userId)
+        cacheService.getSession().remove(userId)
     }
 }

@@ -1,9 +1,10 @@
 package org.harryng.communication.util
 
 import org.harryng.communication.user.entity.UserImpl
+import java.io.Serializable
 import java.util.*
 
-data class SessionHolder private constructor(var user: UserImpl) {
+data class SessionHolder private constructor(var user: UserImpl): Serializable {
     companion object{
         const val K_USER_ID = "userId"
         const val K_TOKEN_ID = "tokenId"

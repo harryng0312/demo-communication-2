@@ -1,8 +1,9 @@
 package org.harryng.communication.controller
 
 import com.fasterxml.jackson.core.JsonProcessingException
-import org.harryng.communication.auth.service.AuthService
 import org.harryng.communication.auth.dto.AuthenticationInfo
+import org.harryng.communication.auth.service.AuthService
+import org.harryng.communication.kernel.cache.CacheService
 import org.harryng.communication.user.entity.UserImpl
 import org.harryng.communication.util.SessionHolder
 import org.harryng.communication.util.TextUtil
@@ -10,8 +11,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.cache.Cache
-import org.springframework.cache.CacheManager
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -37,9 +36,8 @@ open class AuthController {
     protected lateinit var authService: AuthService
 
     @Autowired
-    @Qualifier("cacheManager")
-    private lateinit var cacheManager: CacheManager
-    protected val cache: Cache get() = cacheManager.getCache("session")!!
+    @Qualifier("cacheService")
+    private lateinit var cacheService: CacheService
 
     @RequestMapping(value = ["/login"], method = [RequestMethod.GET])
     fun initLogin(): String {
@@ -51,7 +49,7 @@ open class AuthController {
         val tokenCookie: Cookie = request.cookies?.find { cookie -> cookie.name == "tokenId" }
             ?: Cookie("tokenId", "")
         val userId = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
-        authService.logout(userId?:0L)
+        authService.logout(userId ?: 0L)
         request.session.removeAttribute(SessionHolder.K_USER_ID)
         request.session.invalidate()
         tokenCookie.maxAge = 0
@@ -112,10 +110,11 @@ open class AuthController {
     @RequestMapping(value = ["/welcome"], method = [RequestMethod.GET])
     fun welcome(): String {
         var rs = "redirect:/logout"
-        val userId = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
+        val userId: Long? = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
         if (userId != null) {
-            val session = cache.get(userId, SessionHolder::class.java)
-            if(session!=null) {
+            val session =
+                cacheService.getSession()[userId]?.get(SessionHolder.K_SESSION_HOLDER) as SessionHolder?
+            if (session != null) {
                 request.setAttribute("user", session.user)
                 rs = "auth/welcome"
             }

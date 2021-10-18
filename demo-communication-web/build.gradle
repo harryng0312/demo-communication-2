@@ -26,6 +26,7 @@ dependencies {
     implementation project(":demo-communication-api")
     implementation project(":demo-communication-impl")
 
+    // framework
     implementation "org.springframework.boot:spring-boot:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter:${springbootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-actuator:${springbootVersion}"
@@ -51,6 +52,7 @@ dependencies {
     implementation "org.aspectj:aspectjrt:${aspectjVersion}"
     implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
 
+    // libs
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
 //    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
@@ -59,6 +61,7 @@ dependencies {
     implementation "org.keycloak:keycloak-servlet-filter-adapter:${keycloakVer}"
     implementation "org.keycloak:keycloak-installed-adapter:${keycloakVer}"
 
+    // db
     implementation "com.h2database:h2:${h2Version}"
     implementation "org.postgresql:postgresql:${pgsqlVersion}"
 
@@ -71,6 +74,10 @@ dependencies {
     // jetty
     implementation "org.springframework.boot:spring-boot-starter-jetty:${springbootVersion}"
 
+    // hazelcast
+    implementation "com.hazelcast:hazelcast-spring:${hazelcastVer}"
+
+    // test
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
     testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"
 
