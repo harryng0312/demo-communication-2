@@ -3,12 +3,15 @@ package org.harryng.communication.controller
 import com.fasterxml.jackson.core.JsonProcessingException
 import org.harryng.communication.auth.service.AuthService
 import org.harryng.communication.auth.dto.AuthenticationInfo
-import org.harryng.communication.session.SessionHolder
 import org.harryng.communication.user.entity.UserImpl
+import org.harryng.communication.util.SessionHolder
 import org.harryng.communication.util.TextUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.cache.Cache
+import org.springframework.cache.CacheManager
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -33,6 +36,8 @@ open class AuthController {
     @Autowired
     protected lateinit var authService: AuthService
 
+
+
     @RequestMapping(value = ["/login"], method = [RequestMethod.GET])
     fun initLogin(): String {
         return "auth/login"
@@ -40,9 +45,10 @@ open class AuthController {
 
     @RequestMapping(value = ["/logout"], method = [RequestMethod.GET])
     fun logout(): String {
-        val tokenCookie: Cookie =
-            (request.cookies?.find { cookie -> cookie.name == "tokenId" }) ?: Cookie("tokenId", "")
-        request.session.removeAttribute(tokenCookie.value)
+        val tokenCookie: Cookie = request.cookies?.find { cookie -> cookie.name == "tokenId" }
+            ?: Cookie("tokenId", "")
+        authService.logout(request.session.getAttribute(SessionHolder.K_USER_ID) as Long)
+        request.session.removeAttribute(SessionHolder.K_USER_ID)
         request.session.invalidate()
         tokenCookie.maxAge = 0
         response.addCookie(tokenCookie)
@@ -62,16 +68,10 @@ open class AuthController {
             val authenticationInfo: AuthenticationInfo? = TextUtil.jsonToObj(AuthenticationInfo::class.java, body)
             val username: String = authenticationInfo?.username ?: ""
             val password: String = authenticationInfo?.password ?: ""
-            request.session.invalidate()
             val user: UserImpl = authService.loginByUsernamePassword(username, password)
+            request.session.invalidate()
             authenticationInfo?.let { it.result = "0" }
-//            SessionHolder.getSession(authenticationInfo?.username ?: "")
-//                ?.let { it[SessionHolder.K_USER] = user }
-//            SessionHolder.getSession(authenticationInfo?.username ?: "")
-//                ?.let { it[SessionHolder.K_AUTH_INFO] = authenticationInfo }
-            request.session.setAttribute(SessionHolder.K_USER, user)
-//            request.session.setAttribute(SessionHolder.K_AUTH_INFO, authenticationInfo)
-//            request.session.setAttribute(SessionHolder.K_TOKEN_ID, username)
+            request.session.setAttribute(SessionHolder.K_USER_ID, user.id)
             response.addCookie(Cookie(SessionHolder.K_TOKEN_ID, username))
             responseRs = TextUtil.objToJson(authenticationInfo)
         } catch (e: Exception) {
@@ -98,7 +98,7 @@ open class AuthController {
                 ?: Cookie(SessionHolder.K_TOKEN_ID, "")).value
         }
 //        val result = SessionHolder.getSession(tid, false) != null
-        val result = request.session.getAttribute(SessionHolder.K_USER) != null
+        val result = request.session.getAttribute(SessionHolder.K_USER_ID) != null
         if (result) {
             rs = String.format("redirect:%s", "welcome")
         }
@@ -108,9 +108,9 @@ open class AuthController {
     @RequestMapping(value = ["/welcome"], method = [RequestMethod.GET])
     fun welcome(): String {
         var rs = "redirect:/logout"
-        val tokenId = request.session.getAttribute(SessionHolder.K_USER)
+        val tokenId = request.session.getAttribute(SessionHolder.K_USER_ID)
         if (tokenId != null) {
-            request.setAttribute("user", request.session.getAttribute(SessionHolder.K_USER))
+            request.setAttribute("user", request.session.getAttribute(SessionHolder.K_USER_ID))
             rs = "auth/welcome"
         }
         return rs

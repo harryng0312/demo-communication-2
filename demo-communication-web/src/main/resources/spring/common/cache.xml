@@ -12,6 +12,9 @@
                 <bean name="counter" class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" >
                     <property name="allowNullValues" value="false" />
                 </bean>
+                <bean name="session" class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" >
+                    <property name="allowNullValues" value="false" />
+                </bean>
             </set>
         </property>
     </bean>
