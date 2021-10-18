@@ -13,7 +13,11 @@ open class OAuthController {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(OAuthController::class.java)
     }
+
+    class Hero(val id: Int, val name: String)
+
     private val someHeroes: MutableList<Hero> = mutableListOf()
+
     @PostConstruct
     protected fun init() {
         someHeroes.addAll(
@@ -41,4 +45,4 @@ open class OAuthController {
     }
 }
 
-class Hero(val id: Int, val name: String)
+
