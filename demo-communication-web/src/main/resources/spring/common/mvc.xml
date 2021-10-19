@@ -49,15 +49,16 @@ http://www.springframework.org/schema/mvc http://www.springframework.org/schema/
             </list>
         </property>
     </bean>
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+<!--    <bean id="cookieLocaleResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">-->
+<!--        <property name="defaultLocale" value="en" />-->
+<!--        <property name="cookieName" value="lang"/>-->
+<!--        <property name="cookieMaxAge" value="300"/>-->
+<!--    </bean>-->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="en" />
-        <property name="cookieName" value="lang"/>
-        <property name="cookieMaxAge" value="3600"/>
+        <property name="localeAttributeName" value="lang"/>
     </bean>
 
-<!--    <mvc:view-resolvers>-->
-<!--        <ref bean="cookieLocaleResolver"/>-->
-<!--    </mvc:view-resolvers>-->
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="lang" />
