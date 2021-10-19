@@ -7,9 +7,6 @@ import org.harryng.communication.util.SecurityUtil
 import org.harryng.communication.util.SessionHolder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.cache.Cache
-import org.springframework.cache.CacheManager
-import java.io.Serializable
 
 open class AuthServiceImpl : AuthService {
     @Autowired

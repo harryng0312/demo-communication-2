@@ -24,8 +24,8 @@ open class CounterPersistenceImpl : CounterPersistence {
 
     @Autowired
     @Qualifier("localCacheManager")
-    private lateinit var cacheManager: CacheManager
-    protected val cache: Cache get() = cacheManager.getCache("counter")
+    private lateinit var localCacheManager: CacheManager
+    protected val cache: Cache get() = localCacheManager.getCache("counter")
 
 
     private val entityManager: EntityManager

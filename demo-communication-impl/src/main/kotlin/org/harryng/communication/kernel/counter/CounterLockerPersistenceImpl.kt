@@ -13,10 +13,10 @@ open class CounterLockerPersistenceImpl : CounterPersistence {
     private val locker = ReentrantLock()
 
     @Autowired
-    @Qualifier("cacheManager")
-    private lateinit var cacheManager: CacheManager
+    @Qualifier("localCacheManager")
+    private lateinit var localCacheManager: CacheManager
 
-    protected val cache: Cache get() = cacheManager.getCache("counter")
+    protected val cache: Cache get() = localCacheManager.getCache("counter")
 
     @Autowired
     @Qualifier("namedJdbcTemplate")

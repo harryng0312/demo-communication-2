@@ -66,15 +66,16 @@ dependencies {
     implementation "org.postgresql:postgresql:${pgsqlVersion}"
 
     // tomcat
-//    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-//    implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-//    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-//    implementation "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat:${springbootVersion}"
 
     // jetty
-    implementation "org.springframework.boot:spring-boot-starter-jetty:${springbootVersion}"
+//    implementation "org.springframework.boot:spring-boot-starter-jetty:${springbootVersion}"
 
     // hazelcast
+    implementation "com.hazelcast:hazelcast:${hazelcastVer}"
     implementation "com.hazelcast:hazelcast-spring:${hazelcastVer}"
 
     // test

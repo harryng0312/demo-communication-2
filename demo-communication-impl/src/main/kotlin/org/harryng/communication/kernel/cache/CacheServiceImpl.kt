@@ -13,7 +13,7 @@ open class CacheServiceImpl : CacheService {
 
     override fun <K : Serializable, V : Any> getMap(name: String): IMap<K, V> = hzClient.getMap(name)
 
-    override fun getSession(): IMap<Serializable, Map<Serializable, Any>> =
+    override fun getSession(): IMap<Serializable, Map<Serializable, Serializable>> =
         getMap(CacheService.K_SESSION_MAP)
 
 }

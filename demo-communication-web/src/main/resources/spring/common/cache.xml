@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
         http://www.hazelcast.com/schema/spring http://www.hazelcast.com/schema/spring/hazelcast-spring.xsd">
-    <cache:annotation-driven/>
+    <cache:annotation-driven cache-manager="localCacheManager"/>
     <import resource="common.xml"/>
 
     <bean id="localCacheManager" class="org.springframework.cache.support.SimpleCacheManager">
@@ -26,7 +26,8 @@
     <bean id="cacheService" class="org.harryng.communication.kernel.cache.CacheServiceImpl"/>
     <hz:hazelcast id="cacheInstance">
         <hz:config>
-            <hz:cluster-name>primary</hz:cluster-name>
+            <hz:instance-name>primary</hz:instance-name>
+            <hz:cluster-name>primary-cluster</hz:cluster-name>
             <hz:network port="${session.cache.port}" port-auto-increment="false">
                 <hz:join>
                     <hz:multicast enabled="false"
@@ -34,9 +35,7 @@
                                   multicast-port="54327"/>
                     <hz:tcp-ip enabled="true">
                         <hz:members>
-                            localhost:${session.cache.port},
-                            sso.harryng.local:${session.cache.port},
-                            app.harryng.local:${session.cache.port}
+                            localhost:${session.cache.port}
                         </hz:members>
                     </hz:tcp-ip>
                 </hz:join>
@@ -44,33 +43,32 @@
             <hz:map name="sessionMap"
                     backup-count="1"
                     max-idle-seconds="${session.timeOutInSecond}"
-                    per-entry-stats-enabled="false"
                     read-backup-data="true">
                 <hz:eviction eviction-policy="LRU"/>
                 <hz:merge-policy>com.hazelcast.spi.merge.PutIfAbsentMergePolicy</hz:merge-policy>
             </hz:map>
-<!--            <hz:map name="sessionMap"-->
-<!--                    backup-count="0"-->
-<!--                    in-memory-format="OBJECT"-->
-<!--                    max-idle-seconds="${session.timeOutInSecond}"-->
-<!--                    per-entry-stats-enabled="true"-->
-<!--                    read-backup-data="true">-->
-<!--                <hz:eviction eviction-policy="LRU"/>-->
-<!--                &lt;!&ndash;                <hz:merge-policy>com.hazelcast.spi.merge.PassThroughMergePolicy</hz:merge-policy>&ndash;&gt;-->
-<!--                <hz:merge-policy>com.hazelcast.spi.merge.PutIfAbsentMergePolicy</hz:merge-policy>-->
-<!--            </hz:map>-->
+            <!--            <hz:map name="sessionMap"-->
+            <!--                    backup-count="0"-->
+            <!--                    in-memory-format="OBJECT"-->
+            <!--                    max-idle-seconds="${session.timeOutInSecond}"-->
+            <!--                    per-entry-stats-enabled="true"-->
+            <!--                    read-backup-data="true">-->
+            <!--                <hz:eviction eviction-policy="LRU"/>-->
+            <!--                &lt;!&ndash;                <hz:merge-policy>com.hazelcast.spi.merge.PassThroughMergePolicy</hz:merge-policy>&ndash;&gt;-->
+            <!--                <hz:merge-policy>com.hazelcast.spi.merge.PutIfAbsentMergePolicy</hz:merge-policy>-->
+            <!--            </hz:map>-->
         </hz:config>
     </hz:hazelcast>
 
     <!-- client -->
-<!--    <hz:client id="client" depends-on="instance">-->
-<!--        <hz:cluster-name>clientName</hz:cluster-name>-->
-<!--        <hz:network connection-timeout="1000"-->
-<!--                    redo-operation="true"-->
-<!--                    smart-routing="true">-->
-<!--            <hz:member>localhost:5701</hz:member>-->
-<!--            <hz:member>sso.harryng.local:5701</hz:member>-->
-<!--            <hz:member>app.harryng.local:5701</hz:member>-->
-<!--        </hz:network>-->
-<!--    </hz:client>-->
+    <!--    <hz:client id="client" depends-on="instance">-->
+    <!--        <hz:cluster-name>clientName</hz:cluster-name>-->
+    <!--        <hz:network connection-timeout="1000"-->
+    <!--                    redo-operation="true"-->
+    <!--                    smart-routing="true">-->
+    <!--            <hz:member>localhost:5701</hz:member>-->
+    <!--            <hz:member>sso.harryng.local:5701</hz:member>-->
+    <!--            <hz:member>app.harryng.local:5701</hz:member>-->
+    <!--        </hz:network>-->
+    <!--    </hz:client>-->
 </beans>
