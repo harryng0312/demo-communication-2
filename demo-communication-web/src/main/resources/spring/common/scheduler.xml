@@ -49,14 +49,14 @@
         <!-- 10 seconds -->
         <property name="startDelay" value="10000"/>
         <!-- repeat every 30 seconds -->
-        <property name="repeatInterval" value="30000"/>
+        <property name="repeatInterval" value="60000"/>
     </bean>
 
     <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="cronSchedulerJobDetail"/>
         <property name="misfireInstructionName" value="MISFIRE_INSTRUCTION_DO_NOTHING"/>
         <!-- run every morning at 6 AM -->
-        <property name="cronExpression" value="0/15 * * * * ?"/>
+        <property name="cronExpression" value="0 * * * * ?"/>
     </bean>
 
     <!-- scheduler -->

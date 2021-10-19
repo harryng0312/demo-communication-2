@@ -9,6 +9,7 @@ data class SessionHolder private constructor(var user: UserImpl): Serializable {
         const val K_USER_ID = "userId"
         const val K_TOKEN_ID = "tokenId"
         const val K_SESSION_HOLDER = "sessionHolder"
+        const val K_LANG="lang"
 
         const val ANONYMOUS_ID = 0L
         const val ANONYMOUS_USERNAME = "anonymous"

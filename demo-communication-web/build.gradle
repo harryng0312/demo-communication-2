@@ -54,6 +54,7 @@ dependencies {
     implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
 
     // libs
+    implementation "org.quartz-scheduler:quartz:${quartzVersion}"
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
 //    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"

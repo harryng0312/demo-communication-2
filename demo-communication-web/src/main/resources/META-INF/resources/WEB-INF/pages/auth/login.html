@@ -3,7 +3,7 @@
 
 <head>
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/welcome.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/welcome.css}"/>
     <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/jose.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/util.js}"></script>
@@ -12,59 +12,64 @@
 </head>
 
 <body>
-    <div class="center">
-        <form id="authForm" method="post" action="login" onsubmit="return false;">
-            <table style="border: 0;">
-                <thead>
-                    <tr>
-                        <td>LOGIN</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Username</td>
-                    </tr>
-                    <tr>
-                        <td><input id="txtUsername" name="txtUsername" placeholder="Username" autocomplete="off" /></td>
-                    </tr>
-                    <tr>
-                        <td>Password</td>
-                    </tr>
-                    <tr>
-                        <td><input type="password" id="txtPassword" name="txtPassword" placeholder="Password" autocomplete="off" /></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td><input type="submit" id="submit" value="Login" name="submit" /><input id="tokenId" name="tokenId" type="hidden" /></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </form>
-    </div>
+<div class="center">
+    <form id="authForm" method="post" action="login" onsubmit="return false;">
+        <table style="border: 0;">
+            <thead>
+            <tr>
+                <td th:text="#{login.title}"></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="#{login.username}"></td>
+            </tr>
+            <tr>
+                <td><input id="txtUsername" name="txtUsername" th:placeholder="#{login.username}" autocomplete="off"/>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{login.password}"></td>
+            </tr>
+            <tr>
+                <td><input type="password" id="txtPassword" name="txtPassword" th:placeholder="#{login.password}"
+                           autocomplete="off"/></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>
+                    <input type="submit" id="submit" th:value="#{login.submit}" name="submit"/>
+                    <input id="tokenId" name="tokenId" type="hidden"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
 
-    <script type="text/javascript">
-        let contextRoot = /*[[@{/}]]*/ '';
-        $(document).ready(function() {
-            $('#submit').bind("click", function() {
-                Authenticator.loginByUnamePasswd($('#txtUsername').val(), $('#txtPassword').val(), function(result) {
-                    if (result) {
-                        let uname = $('#txtUsername').val().trim();
-                        // let expDate = new Date();
-                        // expDate.setTime(expDate.getTime() + (15 * 60 * 1000));
-                        // let expires = "; expires=" + expDate.toUTCString();
-                        // document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname) + expires ;//+ "; path="+contextRoot;
-                        // document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname)
-                        $(location).prop('href', 'afterLogin');
-                    }
-                });
-                return false;
+<script type="text/javascript">
+    let contextRoot = /*[[@{/}]]*/ '';
+    $(document).ready(function () {
+        $('#submit').bind("click", function () {
+            Authenticator.loginByUnamePasswd($('#txtUsername').val(), $('#txtPassword').val(), function (result) {
+                if (result) {
+                    let uname = $('#txtUsername').val().trim();
+                    // let expDate = new Date();
+                    // expDate.setTime(expDate.getTime() + (15 * 60 * 1000));
+                    // let expires = "; expires=" + expDate.toUTCString();
+                    // document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname) + expires ;//+ "; path="+contextRoot;
+                    // document.cookie = encodeURIComponent("tokenId") + "=" + encodeURIComponent(uname)
+                    $(location).prop('href', 'afterLogin');
+                }
             });
+            return false;
         });
-    </script>
+    });
+</script>
 </body>
 
 </html>

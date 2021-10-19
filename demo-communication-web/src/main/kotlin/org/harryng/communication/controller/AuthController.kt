@@ -72,9 +72,13 @@ open class AuthController {
             val username: String = authenticationInfo?.username ?: ""
             val password: String = authenticationInfo?.password ?: ""
             val user: UserImpl = authService.loginByUsernamePassword(username, password)
+            val locale = request.session.getAttribute(SessionHolder.K_LANG)
             request.session.invalidate()
             authenticationInfo?.let { it.result = "0" }
             request.session.setAttribute(SessionHolder.K_USER_ID, user.id)
+            if (locale != null) {
+                request.session.setAttribute(SessionHolder.K_LANG, locale)
+            }
             response.addCookie(Cookie(SessionHolder.K_TOKEN_ID, username))
             responseRs = TextUtil.objToJson(authenticationInfo)
         } catch (e: Exception) {
@@ -95,12 +99,6 @@ open class AuthController {
     @RequestMapping(value = ["/afterLogin"], method = [RequestMethod.GET])
     fun afterLogin(@RequestParam(name = SessionHolder.K_TOKEN_ID, defaultValue = "") tokenId: String = ""): String {
         var rs = "auth/login"
-        var tid = tokenId
-        if ("" == tid) {
-            tid = (request.cookies.find { cookie -> cookie.name == SessionHolder.K_TOKEN_ID }
-                ?: Cookie(SessionHolder.K_TOKEN_ID, "")).value
-        }
-//        val result = SessionHolder.getSession(tid, false) != null
         val result = request.session.getAttribute(SessionHolder.K_USER_ID) != null
         if (result) {
             rs = String.format("redirect:%s", "welcome")
