@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="db.xml"/>
+    <!-- action scheduler -->
+    <bean id="logJobDetail" class="org.harryng.communication.scheduler.LogJobDetail"/>
+
+    <!-- job detail -->
+    <bean id="simpleSchedulerJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.harryng.communication.scheduler.LogJobDetail"/>
+        <property name="group" value="log-group"/>
+        <property name="durability" value="true"/>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="job-type" value="simple" />
+            </map>
+        </property>
+    </bean>
+    <bean id="cronSchedulerJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.harryng.communication.scheduler.LogJobDetail"/>
+        <property name="group" value="log-group"/>
+        <property name="durability" value="true"/>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="job-type" value="cron" />
+            </map>
+        </property>
+    </bean>
+<!--    <bean id="simpleSchedulerJobDetail"-->
+<!--          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+<!--        <property name="targetObject" ref="logJobDetail"/>-->
+<!--        <property name="targetMethod" value="testLogSimpleScheduler"/>-->
+<!--        <property name="group" value="log-group"/>-->
+<!--    </bean>-->
+<!--    <bean id="cronSchedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+<!--        <property name="targetObject" ref="logJobDetail"/>-->
+<!--        <property name="targetMethod" value="testLogCronScheduler"/>-->
+<!--        <property name="group" value="log-group"/>-->
+<!--    </bean>-->
+
+
+    <!-- trigger -->
+    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <!-- see the example of method invoking job above -->
+        <property name="jobDetail" ref="simpleSchedulerJobDetail"/>
+        <property name="misfireInstructionName" value="MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT"/>
+        <!-- 10 seconds -->
+        <property name="startDelay" value="10000"/>
+        <!-- repeat every 30 seconds -->
+        <property name="repeatInterval" value="30000"/>
+    </bean>
+
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="cronSchedulerJobDetail"/>
+        <property name="misfireInstructionName" value="MISFIRE_INSTRUCTION_DO_NOTHING"/>
+        <!-- run every morning at 6 AM -->
+        <property name="cronExpression" value="0/15 * * * * ?"/>
+    </bean>
+
+    <!-- scheduler -->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5"/>
+        <property name="maxPoolSize" value="10"/>
+        <property name="queueCapacity" value="25"/>
+    </bean>
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!--        <property name="configLocation" value="classpath:quartz.properties" />-->
+
+        <property name="transactionManager" ref="sessionTransactionManager"/>
+        <property name="dataSource" ref="sessionDataSource"/>
+        <property name="schedulerName" value="communication_scheduler"/>
+        <property name="overwriteExistingJobs" value="false"/>
+        <property name="autoStartup" value="true"/>
+
+<!--        <property name="schedulerContextAsMap">-->
+<!--            <map>-->
+<!--                <entry key="jobLocator" value-ref="jobRegistry" />-->
+<!--                <entry key="jobLauncher" value-ref="jobLauncher" />-->
+<!--            </map>-->
+<!--        </property>-->
+
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.StdJDBCDelegate</prop>
+                <prop key="org.quartz.jobStore.useProperties">true</prop>
+                <prop key="org.quartz.jobStore.isClustered">true</prop>
+                <prop key="org.quartz.scheduler.instanceId">communication_cluster</prop>
+                <prop key="org.quartz.jobStore.tablePrefix">SCHED_</prop>
+            </props>
+        </property>
+
+        <property name="taskExecutor" ref="taskExecutor"/>
+
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger"/>
+                <ref bean="simpleTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

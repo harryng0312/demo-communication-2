@@ -14,6 +14,7 @@ dependencies {
     implementation project(":demo-communication-api")
 
     implementation "org.springframework:spring-context:${springVersion}"
+    implementation "org.springframework:spring-context-support:${springVersion}"
     implementation "org.springframework:spring-beans:${springVersion}"
     implementation "javax.persistence:javax.persistence-api:2.2"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
@@ -22,6 +23,7 @@ dependencies {
     implementation "org.springframework.data:spring-data-jpa:${springDataVer}"
 
     implementation "com.hazelcast:hazelcast:${hazelcastVer}"
+    implementation "org.quartz-scheduler:quartz:${quartzVersion}"
 }
 
 test {
