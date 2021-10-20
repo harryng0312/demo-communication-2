@@ -37,5 +37,5 @@ data class SessionHolder private constructor(var user: UserImpl): Serializable {
             return SessionHolder(user)
         }
     }
-
+    var lang: Locale = Locale.getDefault()
 }

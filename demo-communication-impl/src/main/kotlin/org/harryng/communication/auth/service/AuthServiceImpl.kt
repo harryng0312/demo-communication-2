@@ -31,9 +31,10 @@ open class AuthServiceImpl : AuthService {
                 inputHashedPasswd = String(inputHashedPasswdBin)
             }
             if (inputHashedPasswd == user.passwd) {
-                cacheService.getSession().putIfAbsent(
-                    user.id,
-                    mutableMapOf(SessionHolder.K_SESSION_HOLDER to SessionHolder.createInstance(user))
+                cacheService.getSession().putIfAbsent(user.id, mutableMapOf())
+                cacheService.getSession()[user.id]?.put(
+                    SessionHolder.K_SESSION_HOLDER,
+                    SessionHolder.createInstance(user)
                 )
             } else {
                 throw Exception("Password is not matched")

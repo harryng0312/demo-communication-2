@@ -8,5 +8,5 @@ interface CacheService {
         const val K_SESSION_MAP = "sessionMap"
     }
     fun <K: Serializable, V: Any> getMap(name: String): IMap<K, V>
-    fun getSession(): IMap<Serializable, Map<Serializable, Serializable>>
+    fun getSession(): IMap<Serializable, MutableMap<Serializable, Serializable>>
 }

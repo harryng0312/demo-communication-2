@@ -78,6 +78,10 @@ open class AuthController {
             request.session.setAttribute(SessionHolder.K_USER_ID, user.id)
             if (locale != null) {
                 request.session.setAttribute(SessionHolder.K_LANG, locale)
+                cacheService.getSession()[user.id]?.put(
+                    SessionHolder.K_LANG,
+                    locale as Locale
+                )
             }
             response.addCookie(Cookie(SessionHolder.K_TOKEN_ID, username))
             responseRs = TextUtil.objToJson(authenticationInfo)
