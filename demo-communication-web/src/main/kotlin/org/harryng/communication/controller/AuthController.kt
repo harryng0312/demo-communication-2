@@ -78,7 +78,7 @@ open class AuthController {
             request.session.setAttribute(SessionHolder.K_USER_ID, user.id)
             if (locale != null) {
                 request.session.setAttribute(SessionHolder.K_LANG, locale)
-                cacheService.getSession()[user.id]?.put(
+                cacheService.putSessionValue("${user.id}",
                     SessionHolder.K_LANG,
                     locale as Locale
                 )
@@ -116,7 +116,7 @@ open class AuthController {
         val userId: Long? = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
         if (userId != null) {
             val session =
-                cacheService.getSession()[userId]?.get(SessionHolder.K_SESSION_HOLDER) as SessionHolder?
+                cacheService.getSessionValue("$userId", SessionHolder.K_SESSION_HOLDER) as SessionHolder?
             if (session != null) {
                 request.setAttribute("user", session.user)
                 rs = "auth/welcome"

@@ -47,6 +47,7 @@
                 <hz:eviction eviction-policy="LRU"/>
                 <hz:merge-policy>com.hazelcast.spi.merge.PutIfAbsentMergePolicy</hz:merge-policy>
             </hz:map>
+
             <!--            <hz:map name="sessionMap"-->
             <!--                    backup-count="0"-->
             <!--                    in-memory-format="OBJECT"-->

@@ -31,8 +31,8 @@ open class AuthServiceImpl : AuthService {
                 inputHashedPasswd = String(inputHashedPasswdBin)
             }
             if (inputHashedPasswd == user.passwd) {
-                cacheService.getSession().putIfAbsent(user.id, mutableMapOf())
-                cacheService.getSession()[user.id]?.put(
+                cacheService.putSessionValue(
+                    "${user.id}",
                     SessionHolder.K_SESSION_HOLDER,
                     SessionHolder.createInstance(user)
                 )
@@ -46,6 +46,6 @@ open class AuthServiceImpl : AuthService {
     }
 
     override fun logout(userId: Long) {
-        cacheService.getSession().remove(userId)
+        cacheService.invalidateSession("${userId}")
     }
 }
