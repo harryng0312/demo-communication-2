@@ -3,8 +3,7 @@
        xmlns:websocket="http://www.springframework.org/schema/websocket"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-
-    http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+        http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
     <bean id="chatEndpoint" class="org.harryng.communication.endpoint.ChatEndpoint" init-method="postConstruct"/>
 
@@ -31,17 +30,23 @@
     </websocket:handlers>
 
     <websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">
-        <websocket:stomp-endpoint path="/ws/chat"
-                                  allowed-origin-patterns="${server.servlet.context-path}"/>
-        <websocket:stomp-endpoint path="/ws/chat"
-                                  allowed-origin-patterns="${server.servlet.context-path}">
+        <websocket:stomp-endpoint path="/ws/chat" allowed-origin-patterns="${server.servlet.context-path}"/>
+        <websocket:stomp-endpoint path="/ws/chat" allowed-origin-patterns="${server.servlet.context-path}">
             <websocket:sockjs websocket-enabled="true" heartbeat-time="20000"/>
         </websocket:stomp-endpoint>
-        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origin-patterns="/"/>
-        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origin-patterns="/">
+
+        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origin-patterns="${server.servlet.context-path}"/>
+        <websocket:stomp-endpoint path="/ws/chat/user" allowed-origin-patterns="${server.servlet.context-path}">
             <websocket:sockjs websocket-enabled="true" heartbeat-time="20000"/>
         </websocket:stomp-endpoint>
-        <websocket:simple-broker prefix="/topic, /queue"/>
+
+        <websocket:simple-broker prefix="/topic, /queue" heartbeat="20000" />
+
+<!--        <websocket:stomp-broker-relay relay-host="localhost" relay-port="61613"-->
+<!--                                      client-login="relayer" client-passcode="relayer"-->
+<!--                                      heartbeat-send-interval="20000" heartbeat-receive-interval="20000"-->
+<!--                                      prefix="/topic, /queue"/>-->
+
     </websocket:message-broker>
 
     <!--    <websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">-->
