@@ -1,6 +1,7 @@
 package org.harryng.communication.controller
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.google.protobuf.value
 import org.harryng.communication.auth.dto.AuthenticationInfo
 import org.harryng.communication.auth.service.AuthService
 import org.harryng.communication.kernel.cache.CacheService
@@ -11,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -44,6 +46,9 @@ open class AuthController {
     fun initLogin(): String {
         return "auth/login"
     }
+
+    @Value("\${session.timeOutInSecond}")
+    private var tokenIdMaxAge: Int = 0
 
     @RequestMapping(value = ["/logout"], method = [RequestMethod.GET])
     fun logout(): String {
@@ -83,7 +88,9 @@ open class AuthController {
                     locale as Locale
                 )
             }
-            response.addCookie(Cookie(SessionHolder.K_TOKEN_ID, username))
+            val tokenIdCookie = Cookie(SessionHolder.K_TOKEN_ID, username)
+            tokenIdCookie.maxAge = tokenIdMaxAge
+            response.addCookie(tokenIdCookie)
             responseRs = TextUtil.objToJson(authenticationInfo)
         } catch (e: Exception) {
             val authenticationInfoErr =

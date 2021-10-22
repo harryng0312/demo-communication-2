@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:hz="http://www.hazelcast.com/schema/spring"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.hazelcast.com/schema/spring http://www.hazelcast.com/schema/spring/hazelcast-spring.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="common.xml"/>
 
@@ -11,6 +9,8 @@
     <bean id="sessionCookieSerializer" class="org.springframework.session.web.http.DefaultCookieSerializer">
         <property name="cookieName" value="sessionId"/>
         <property name="useBase64Encoding" value="true"/>
+        <property name="cookieMaxAge" value="${session.timeOutInSecond}"/>
+        <property name="cookiePath" value="${server.servlet.context-path}"/>
     </bean>
     <bean primary="true" class="org.springframework.session.jdbc.config.annotation.web.http.JdbcHttpSessionConfiguration">
         <property name="maxInactiveIntervalInSeconds" value="300"/>

@@ -14,7 +14,7 @@
         <property name="durability" value="true"/>
         <property name="jobDataAsMap">
             <map>
-                <entry key="job-type" value="simple" />
+                <entry key="job-type" value="simple"/>
             </map>
         </property>
     </bean>
@@ -24,21 +24,21 @@
         <property name="durability" value="true"/>
         <property name="jobDataAsMap">
             <map>
-                <entry key="job-type" value="cron" />
+                <entry key="job-type" value="cron"/>
             </map>
         </property>
     </bean>
-<!--    <bean id="simpleSchedulerJobDetail"-->
-<!--          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-<!--        <property name="targetObject" ref="logJobDetail"/>-->
-<!--        <property name="targetMethod" value="testLogSimpleScheduler"/>-->
-<!--        <property name="group" value="log-group"/>-->
-<!--    </bean>-->
-<!--    <bean id="cronSchedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-<!--        <property name="targetObject" ref="logJobDetail"/>-->
-<!--        <property name="targetMethod" value="testLogCronScheduler"/>-->
-<!--        <property name="group" value="log-group"/>-->
-<!--    </bean>-->
+    <!--    <bean id="simpleSchedulerJobDetail"-->
+    <!--          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+    <!--        <property name="targetObject" ref="logJobDetail"/>-->
+    <!--        <property name="targetMethod" value="testLogSimpleScheduler"/>-->
+    <!--        <property name="group" value="log-group"/>-->
+    <!--    </bean>-->
+    <!--    <bean id="cronSchedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+    <!--        <property name="targetObject" ref="logJobDetail"/>-->
+    <!--        <property name="targetMethod" value="testLogCronScheduler"/>-->
+    <!--        <property name="group" value="log-group"/>-->
+    <!--    </bean>-->
 
 
     <!-- trigger -->
@@ -60,12 +60,13 @@
     </bean>
 
     <!-- scheduler -->
-    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          init-method="initialize" destroy-method="destroy">
         <property name="corePoolSize" value="5"/>
         <property name="maxPoolSize" value="10"/>
         <property name="queueCapacity" value="25"/>
     </bean>
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" destroy-method="destroy">
         <!--        <property name="configLocation" value="classpath:quartz.properties" />-->
 
         <property name="transactionManager" ref="sessionTransactionManager"/>
@@ -74,12 +75,12 @@
         <property name="overwriteExistingJobs" value="false"/>
         <property name="autoStartup" value="true"/>
 
-<!--        <property name="schedulerContextAsMap">-->
-<!--            <map>-->
-<!--                <entry key="jobLocator" value-ref="jobRegistry" />-->
-<!--                <entry key="jobLauncher" value-ref="jobLauncher" />-->
-<!--            </map>-->
-<!--        </property>-->
+        <!--        <property name="schedulerContextAsMap">-->
+        <!--            <map>-->
+        <!--                <entry key="jobLocator" value-ref="jobRegistry" />-->
+        <!--                <entry key="jobLauncher" value-ref="jobLauncher" />-->
+        <!--            </map>-->
+        <!--        </property>-->
 
         <property name="quartzProperties">
             <props>

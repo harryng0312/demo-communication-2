@@ -3,16 +3,20 @@ package org.harryng.communication.controller
 import org.harryng.communication.auth.service.AuthService
 import org.harryng.communication.dto.ChatMessage
 import org.harryng.communication.dto.OutputChatMessage
+import org.harryng.communication.kernel.cache.CacheService
+import org.harryng.communication.rpc.gen.user
+import org.harryng.communication.util.SessionHolder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.handler.annotation.SendTo
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
+import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.socket.messaging.SessionConnectEvent
 import org.springframework.web.socket.messaging.SessionConnectedEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
+import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -34,11 +39,16 @@ open class WebSocketController {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(WebSocketController::class.java)
     }
+
     @Autowired
     protected lateinit var request: HttpServletRequest
 
     @Autowired
     protected lateinit var authService: AuthService
+
+    @Autowired
+    @Qualifier("cacheService")
+    private lateinit var cacheService: CacheService
 
     @Autowired
     private lateinit var simpMessagingTemplate: SimpMessagingTemplate
@@ -65,7 +75,14 @@ open class WebSocketController {
 
     @RequestMapping(value = ["/ws-stomp/{name}"], method = [RequestMethod.GET])
     fun initWsStompAuth(@PathVariable("name") name: String): String {
-        return "ws/ws-stomp-$name"
+        val userId = request.session.getAttribute(SessionHolder.K_USER_ID) as Long?
+        val sessionHolder =
+            cacheService.getSessionValue(userId?.toString() ?: "", SessionHolder.K_SESSION_HOLDER) as SessionHolder?
+        if ((sessionHolder != null) && (sessionHolder.user.id != 0L)) {
+            request.setAttribute("user", sessionHolder.user)
+            return "ws/ws-stomp-$name"
+        }
+        return "redirect:/logout"
     }
 
     @EventListener(SessionConnectedEvent::class)
@@ -95,7 +112,7 @@ open class WebSocketController {
     @MessageMapping("/ws/chat")
     @SendTo("/topic/messages")
     @Throws(Exception::class)
-    fun send(headerAccessor: SimpMessageHeaderAccessor, @Payload message: ChatMessage): OutputChatMessage {
+    fun send(headerAccessor: MessageHeaderAccessor, @Payload message: ChatMessage): OutputChatMessage {
         val time = SimpleDateFormat("HH:mm").format(Calendar.getInstance().time)
         return OutputChatMessage(message.from, message.to, message.content, time)
     }
@@ -103,26 +120,36 @@ open class WebSocketController {
     //    @MessageMapping("/ws/chat/user")
     //    @SendTo("/topic/messages")
     @Throws(Exception::class)
-    fun sendToUser(headerAccessor: SimpMessageHeaderAccessor, @Payload message: ChatMessage) {
+    fun sendToUser(headerAccessor: MessageHeaderAccessor, @Payload message: ChatMessage) {
         val time = SimpleDateFormat("HH:mm").format(Calendar.getInstance().time)
-        val to = message.to
         val oMsg = OutputChatMessage(message.from, message.to, message.content, time)
-        val dest = String.format("/topic/messages/%s", to)
+        val dest = "/topic/messages/${message.to}"
         simpMessagingTemplate.convertAndSend(dest, oMsg)
     }
 
-    @MessageMapping("/ws/chat/user") //    @SendToUser("/topic/messages")
+    @MessageMapping("/ws/chat/user")
     @Throws(Exception::class)
-    fun sendToUserAuth(headerAccessor: SimpMessageHeaderAccessor, @Payload message: ChatMessage): ChatMessage {
+    fun sendToUserAuth(headerAccessor: MessageHeaderAccessor, @Payload message: ChatMessage): ChatMessage {
         val time = SimpleDateFormat("HH:mm").format(Calendar.getInstance().time)
-        val to = message.to
-        val oMsg = OutputChatMessage(message.from, message.to, message.content, time)
-        val origin = String.format("/topic/messages/%s", message.from)
-        val dest = String.format("/topic/messages/%s", to)
+        val oMsg: ChatMessage = if (message.type == ChatMessage.TYPE_TEXT) {
+            OutputChatMessage(message.from, message.to, message.content, time)
+        } else {
+            OutputChatMessage(message.from, message.to, "wrong content type".toByteArray(), time)
+        }
+        val origin = "/queue/messages/${message.from}"
+        val dest = "/queue/messages/${message.to}"
         simpMessagingTemplate.convertAndSend(origin, oMsg)
         simpMessagingTemplate.convertAndSend(dest, oMsg)
         return oMsg
     }
 
+    @MessageMapping("/ws/file/user")
+    @Throws(Exception::class)
+    fun uploadFile(headerAccessor: MessageHeaderAccessor, @Payload message: ChatMessage) {
+        val time = SimpleDateFormat("HH:mm").format(Calendar.getInstance().time)
+        val oMsg = OutputChatMessage(message.from, message.to, message.content, time)
+        val dest = "/queue/file/${message.to}"
+        simpMessagingTemplate.convertAndSend(dest, oMsg)
+    }
 
 }

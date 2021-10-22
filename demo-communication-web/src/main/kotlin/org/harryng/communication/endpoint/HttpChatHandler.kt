@@ -44,7 +44,7 @@ class HttpChatHandler : TextWebSocketHandler() {
             WsSessionManager.add(token.toString(), session)
             val message = ChatMessage()
             message.from = (token as String?)!!
-            message.content = "Connected!"
+            message.content = "Connected!".toByteArray()
             broadcast(TextMessage(encoder.encode(message)))
         } else {
             throw RuntimeException("User login has expired!")
