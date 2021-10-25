@@ -40,7 +40,7 @@
         let sendFileEndpoint = "/app/ws/chat/user";
         let listenMsgEndpoint = "/queue/messages";
         let listenFileEndpoint = "/queue/files";
-        let uploadBufferSize = 1 * 1024 * 1024;
+        let uploadBufferSize = 384 * 1024;// 512 * 1024;
 
         function setConnected(connected) {
             document.getElementById('connect').disabled = connected;
@@ -118,14 +118,14 @@
                     type: "file-part",
                     'content': dataBuff
                 });
-                $("#response").html(msg);
+                // $("#response").html(msg);
                 // setTimeout(seek, 100);
                 seek();
             };
             fileReader.onprogress = (e) => {
-                console.log("on progress");
+                // console.log("on progress");
             };
-            let seek = () => {
+            let seek = async () => {
                 let offsetEnd = Math.min(offset + uploadBufferSize, file.size);
                 fileReader.readAsArrayBuffer(file.slice(offset, offsetEnd));
                 console.log(`read chunk from ${offset} to ${offsetEnd}`);
