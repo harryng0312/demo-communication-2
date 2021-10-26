@@ -11,4 +11,5 @@
 gradle/
 /db/
 logs/
+upload/
 .project

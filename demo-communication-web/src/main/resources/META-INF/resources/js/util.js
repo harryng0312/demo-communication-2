@@ -1,24 +1,31 @@
 let GTextEncoder = new TextEncoder();
 let GTextDecoder = new TextDecoder("utf-8");
-let DataUtil = {
-    strToBase64: function (str) {
-        let strBin = this.strToBytes(str);
-        return this.bytesToBase64(strBin);
-    },
-    base64ToStr: function (b64) {
-        let b64Bin = this.base64ToBytes(b64);
-        return this.bytesToStr(b64Bin);
-    },
-    bytesToByteArr: function (buffer) {
-        let byteArr = Array.from(new Uint8Array(buffer));
-        return byteArr;
-    },
+class DataUtil{
 
-    bytesToBase64: function (buffer) {
+    static byteArrayToBase64(bytes){
+        let binary = "";
+        let len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode( bytes[i] );
+        }
+        return window.btoa( binary );
+    };
+
+    static base64ToByteArray(base64) {
+        let binary_string = window.atob(base64);
+        let len = binary_string.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    static bytesToBase64 (buffer) {
         let b64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
         return b64;
-    },
-    base64ToBytes: function (b64) {
+    };
+    static base64ToBytes (b64) {
         let binStr = atob(b64);
         let rawLength = binStr.length;
         let array = new Uint8Array(new ArrayBuffer(rawLength));
@@ -26,18 +33,18 @@ let DataUtil = {
             array[i] = binStr.charCodeAt(i);
         }
         return array;
-    },
+    };
 
-    strToBytes: function (str) {
+    static strToBytes (str) {
         let bytes = GTextEncoder.encode(str);
         return bytes;
-    },
-    bytesToStr: function (buffer) {
+    };
+    static bytesToStr (buffer) {
         let str = GTextDecoder.decode(buffer);
         return str;
-    },
+    };
 
-    bigIntToBytes: function (bn) {
+    static bigIntToBytes (bn) {
         if (bn != null && bn !== undefined) {
             let hex = bn.toString(16);
             if (hex.length % 2) {
@@ -54,12 +61,12 @@ let DataUtil = {
             }
             return u8;
         }
-    },
-    bytesToBigInt: function (buf) {
+    };
+    static bytesToBigInt (buf) {
         let hex = [];
         let u8 = Uint8Array.from(buf);
         u8.forEach(function (i) {
-            var h = i.toString(16);
+            let h = i.toString(16);
             if (h.length % 2) {
                 h = '0' + h;
             }
@@ -68,8 +75,8 @@ let DataUtil = {
         return bigInt(hex.join(''), 16);
     }
 };
-let FormUtil = {
-    postJson: function (url, data, success, error) {
+class FormUtil {
+    static postJson (url, data, success, error) {
         $.ajax({
             url: url,
             crossDomain: false,
@@ -86,19 +93,19 @@ let FormUtil = {
             error: error,
         });
     }
-};
-let PubSubUtil = {
-    subscribers: {},
-    publish: function (event, data) {
+}
+class PubSubUtil {
+    subscribers = {};
+    publish(event, data) {
         if (!this.subscribers[event]) return;
         this.subscribers[event].forEach(cb => cb(data));
-    },
+    };
     subscribe(event, callback) {
         if (!this.subscribers[event]) {
             this.subscribers[event] = [];
         }
         this.subscribers[event].push(callback);
-    },
+    };
     unsubscribe(event, callback) {
         if (this.subscribers[event]) {
             if (callback) {
@@ -106,9 +113,94 @@ let PubSubUtil = {
             } else {
                 this.subscribers[event].clear()
             }
-            if(!this.subscribers[event]){
+            if (!this.subscribers[event]) {
                 this.subscribers[event].remove()
             }
         }
+    }
+}
+class FileReaderUtilParams {
+    fileUploadUtil = null;
+    file = null;
+    uploadCallback = (dataBuff) => {};
+    uploadStartCallback = (e) => {};
+    uploadEndCallback = (e) => {};
+    uploadDoneCallback = (e) => {};
+    abortCallback = (e) => {};
+    errorCallback = (e) => {this.fileUploadUtil.reset();};
+}
+class FileReaderUtil {
+
+    file = null;
+    readBufferSize = 1024 * 1024;
+    offset = 0;
+    fileSize = 0;
+    fileName = "";
+    fileType = undefined;
+    fileReader = null;
+
+    constructor(params){
+        params.fileUploadUtil = this;
+        this.fileReader = new FileReader();
+        this.file = params.file;
+        this.fileSize = this.file.size;
+        this.fileName = this.file.name;
+        this.fileType = this.file.type;
+
+        this.uploadCallback = params.uploadCallback;
+        this.uploadStartCallback = params.uploadStartCallback;
+        this.uploadEndCallback = params.uploadEndCallback;
+        this.errorCallback = params.errorCallback;
+        this.abortCallback = params.abortCallback;
+        this.uploadDoneCallback = params.uploadDoneCallback;
+
+        this.reset();
+    }
+
+    get hasBlock(){
+        return this.offset < this.fileSize;
+    }
+
+    seek(){
+        let offsetEnd = Math.min(this.offset + this.readBufferSize, this.fileSize);
+        if(this.hasBlock){
+            this.fileReader.readAsArrayBuffer(this.file.slice(this.offset, offsetEnd));
+            console.log(`read chunk from ${this.offset} to ${offsetEnd}`);
+            this.offset = offsetEnd;
+        }else{
+            this.uploadDoneCallback(this);
+        }
+    }
+
+    reset(){
+        this.offset = 0;
+        this.readBufferSize = 1024 * 1024;
+        if(this.file==null) return;
+        this.fileSize = this.file.size;
+        this.fileName = this.file.name;
+        this.fileType = this.file.type;
+
+        this.fileReader.onload = (e) => {
+            this.uploadCallback(e.target.result);
+        };
+        this.fileReader.onerror = (e) => {
+            this.errorCallback(e);
+        };
+        this.fileReader.onloadstart = (e) => {
+            this.uploadStartCallback(e);
+        };
+        this.fileReader.onloadend = (e) => {
+            this.uploadEndCallback(e);
+        }
+        this.fileReader.onabort = (e) => {
+            this.abortCallback(e);
+        };
+    }
+
+    start(){
+        this.seek();
+    }
+    abort(){
+        this.fileReader.abort();
     }
 }

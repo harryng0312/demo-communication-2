@@ -28,9 +28,15 @@ import org.springframework.web.socket.messaging.SessionConnectEvent
 import org.springframework.web.socket.messaging.SessionConnectedEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
 import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.OpenOption
+import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.servlet.http.HttpServletRequest
+import kotlin.io.path.createFile
+import kotlin.io.path.exists
 
 
 @Controller
@@ -134,7 +140,7 @@ open class WebSocketController {
         val oMsg: ChatMessage = if (message.type == ChatMessage.TYPE_TEXT) {
             OutputChatMessage(message.from, message.to, message.content, time)
         } else {
-            OutputChatMessage(message.from, message.to, "wrong content type".toByteArray(), time)
+            OutputChatMessage(message.from, message.to, "wrong content type", time)
         }
         val origin = "/queue/messages/${message.from}"
         val dest = "/queue/messages/${message.to}"
@@ -147,9 +153,28 @@ open class WebSocketController {
     @Throws(Exception::class)
     fun uploadFile(headerAccessor: MessageHeaderAccessor, @Payload message: ChatMessage) {
         val time = SimpleDateFormat("HH:mm").format(Calendar.getInstance().time)
-        val oMsg = OutputChatMessage(message.from, message.to, message.content, time)
-        val dest = "/queue/file/${message.to}"
+        val oMsg = OutputChatMessage(message.from, message.to, "", time)
+        val fileName =
+            ((headerAccessor.messageHeaders[StompHeaderAccessor.NATIVE_HEADERS] as Map<*, *>)["fileName"] as List<*>).first() as String?
+        if (fileName != null && fileName.isNotBlank()) {
+            val path = Paths.get("upload/$fileName").toAbsolutePath()
+            if (message.content.isNotEmpty()) {
+                if (message.type == ChatMessage.TYPE_FILE_METADATA) {
+                    logger.info("upload done!")
+                } else if (message.type == ChatMessage.TYPE_FILE_PART) {
+                    if (!path.exists()) {
+                        path.createFile()
+                    }
+                    Files.write(path, Base64.getDecoder().decode(message.content), StandardOpenOption.APPEND)
+                }
+                oMsg.content = "upload ok"
+            } else {
+                oMsg.content = "content is blank"
+            }
+        } else {
+            oMsg.content = "filename is blank"
+        }
+        val dest = "/queue/files/${message.to}"
         simpMessagingTemplate.convertAndSend(dest, oMsg)
     }
-
 }

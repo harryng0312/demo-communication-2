@@ -6,11 +6,13 @@
     <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script th:src="@{/js/sockjs.min.js}"></script>
     <script th:src="@{/js/stomp.min.js}"></script>
+    <script th:src="@{/js/util.js}"></script>
 </head>
 
 <body onload="disconnect()">
     <div>
         <div>
+            <input id="userId" type="hidden" th:value="${user.id}"/>
             <div th:text="${user.screenName}"></div><br/>
             <input type="text" id="from" th:placeholder="#{ws.chooseANickname}" th:value="${user.screenName}" /><br/>
             <input type="text" id="txtTo" th:placeholder="#{ws.to}" /><br/>
@@ -28,6 +30,8 @@
             <br/>
             <input id="fileChoose" type="file" hidden="hidden" />
             <a id="lnkFileChoose" href="javascript:clickUploadLink(this);" th:text="#{ws.selectFile}"></a>
+            <br/>
+            <a id="lnkFileAbort" href="javascript:clickFileAbort(this);" th:text="abort"></a>
             <br/><br/>
             <button id="sendMessage" onclick="sendMessage();" th:text="#{ws.send}">Send</button>
             <p id="response"></p>
@@ -37,10 +41,11 @@
         let stompClient = null;
         let sockEndpoint = "/web/ws/chat";
         let sendMsgEndpoint = "/app/ws/chat/user";
-        let sendFileEndpoint = "/app/ws/chat/user";
+        let sendFileEndpoint = "/app/ws/file/user";
         let listenMsgEndpoint = "/queue/messages";
         let listenFileEndpoint = "/queue/files";
-        let uploadBufferSize = 384 * 1024;// 512 * 1024;
+        let uploadBufferSize = 128 * 1024;//256 * 1024;
+        let fileReaderUtil = null;
 
         function setConnected(connected) {
             document.getElementById('connect').disabled = connected;
@@ -53,14 +58,16 @@
             let socket = new SockJS(sockEndpoint);
             stompClient = Stomp.over(socket);
             stompClient.connect({
-                "user": document.getElementById('from').value
-            }, frame => {
+                "userId": document.getElementById('userId').value
+            }, (frame) => {
                 setConnected(true);
                 let from = document.getElementById('from').value;
+                let to = document.getElementById('txtTo').value;
                 console.log('Connected: ' + frame);
-                stompClient.subscribe(listenMsgEndpoint + "/", receivedMessage);
-                stompClient.subscribe(listenMsgEndpoint + "/" + from, receivedMessage);
-                stompClient.subscribe(listenFileEndpoint + "/" + from, notifySendFile);
+                stompClient.subscribe(listenMsgEndpoint + `/${to}`, receivedMessage);
+                stompClient.subscribe(listenFileEndpoint + `/${to}` , notifySendFile);
+            }, (error) => {
+                console.log(`${error.error}`)
             });
         }
 
@@ -78,7 +85,10 @@
         }
 
         function notifySendFile(msg) {
-
+            let reply = JSON.parse(msg.body);
+            if(reply.content === "upload ok"){
+                fileReaderUtil.seek();
+            }
         }
 
         function sendMessage() {
@@ -98,44 +108,50 @@
         function sendFile(file) {
             let from = document.getElementById('from').value;
             let to = document.getElementById("txtTo").value;
-            let fileReader = new FileReader();
-            let offset = 0;
-            fileReader.onloadstart = (e) => {
-                console.log("on load start");
+            let headers = {"fileName":file.name};
+            let uploadHandler = (dataBuff) => {
+                let data = null;
+                for(let i=0; i < dataBuff.byteLength; i += uploadBufferSize){
+                    let offsetBuffEnd = Math.min(i + uploadBufferSize, dataBuff.byteLength);
+                    data = dataBuff.slice(i, offsetBuffEnd);
+                    let msg = JSON.stringify({
+                        "from": from,
+                        "to": to,
+                        "type": "file-part",
+                        "content": DataUtil.byteArrayToBase64(new Uint8Array(data))
+                    });
+                    stompClient.send(sendFileEndpoint, headers, msg);
+                }
             };
-            fileReader.onloadend = (e) => {
-                console.log("on load end");
+            let doneHandler = (that) => {
+                console.log("upload done!");
+                // let msg = JSON.stringify({
+                //     "from": from,
+                //     "to": to,
+                //     "type": "file-metadata",
+                //     "content": DataUtil.bytesToStr(GTextEncoder.encode("done"))
+                // });
+                // stompClient.send(sendFileEndpoint, headers, msg);
             };
-            fileReader.onerror = (e) => {
-                console.log("on error" + e.target.error);
+            let errorHandler = (evt) => {
+                console.log(`${evt.error}`)
             };
-            fileReader.onload = (e) => {
-                console.log("on load");
-                let dataBuff = new Uint8Array(e.target.result);
-                let msg = JSON.stringify({
-                    'from': from,
-                    "to": to,
-                    type: "file-part",
-                    'content': dataBuff
-                });
-                // $("#response").html(msg);
-                // setTimeout(seek, 100);
-                seek();
-            };
-            fileReader.onprogress = (e) => {
-                // console.log("on progress");
-            };
-            let seek = async () => {
-                let offsetEnd = Math.min(offset + uploadBufferSize, file.size);
-                fileReader.readAsArrayBuffer(file.slice(offset, offsetEnd));
-                console.log(`read chunk from ${offset} to ${offsetEnd}`);
-                offset = offsetEnd;
-            }
-            seek();
+            let params = new FileReaderUtilParams();
+            params.file = file;
+            params.uploadCallback = uploadHandler;
+            params.errorCallback = errorHandler;
+            params.uploadDoneCallback = doneHandler;
+            fileReaderUtil = new FileReaderUtil(params);
+            fileReaderUtil.start();
         }
 
         function clickUploadLink(that) {
+            $("#fileChoose:hidden").val(null);
             $("#fileChoose:hidden").trigger('click');
+        }
+
+        function clickFileAbort(that){
+            fileReaderUtil.abort();
         }
 
         function showMessageOutput(messageOutput) {

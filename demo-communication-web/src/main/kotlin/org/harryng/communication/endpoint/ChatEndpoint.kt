@@ -54,7 +54,7 @@ class ChatEndpoint {
         users[session.id] = username
         val message = ChatMessage()
         message.from = username
-        message.content = "Connected!".toByteArray()
+        message.content = "Connected!"
         broadcast(message)
     }
 
@@ -78,7 +78,7 @@ class ChatEndpoint {
         chatEndpoints.remove(this)
         val message = ChatMessage()
         message.from = users[session.id].toString()
-        message.content = "Disconnected!".toByteArray()
+        message.content = "Disconnected!"
         broadcast(message)
     }
 
