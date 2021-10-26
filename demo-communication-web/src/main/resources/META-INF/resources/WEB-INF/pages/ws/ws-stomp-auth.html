@@ -44,7 +44,7 @@
         let sendFileEndpoint = "/app/ws/file/user";
         let listenMsgEndpoint = "/queue/messages";
         let listenFileEndpoint = "/queue/files";
-        let uploadBufferSize = 128 * 1024;//256 * 1024;
+        // let uploadBufferSize = 128 * 1024;//256 * 1024;
         let fileReaderUtil = null;
 
         function setConnected(connected) {
@@ -107,9 +107,9 @@
 
         function sendFilePart(from, to, headers, dataBuff){
             let data = null;
-            for(let i=0; i < dataBuff.byteLength; i += uploadBufferSize){
-                let offsetBuffEnd = Math.min(i + uploadBufferSize, dataBuff.byteLength);
-                data = dataBuff.slice(i, offsetBuffEnd);
+            // for(let i=0; i < dataBuff.byteLength; i += uploadBufferSize){
+            //     let offsetBuffEnd = Math.min(i + uploadBufferSize, dataBuff.byteLength);
+                data = dataBuff;//dataBuff.slice(i, offsetBuffEnd);
                 let msg = JSON.stringify({
                     "from": from,
                     "to": to,
@@ -117,7 +117,7 @@
                     "content": DataUtil.byteArrayToBase64(new Uint8Array(data))
                 });
                 stompClient.send(sendFileEndpoint, headers, msg);
-            }
+            // }
         }
 
         function sendFile(file) {

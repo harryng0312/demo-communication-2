@@ -130,9 +130,9 @@ class FileReaderUtilParams {
     errorCallback = (e) => {this.fileUploadUtil.reset();};
 }
 class FileReaderUtil {
-
+    static DEFAULT_BUFFER_SIZE = 256 * 1024;
     file = null;
-    readBufferSize = 1024 * 1024;
+    readBufferSize = FileReaderUtil.DEFAULT_BUFFER_SIZE;
     offset = 0;
     fileSize = 0;
     fileName = "";
@@ -174,7 +174,7 @@ class FileReaderUtil {
 
     reset(){
         this.offset = 0;
-        this.readBufferSize = 1024 * 1024;
+        this.readBufferSize = FileReaderUtil.DEFAULT_BUFFER_SIZE;
         if(this.file==null) return;
         this.fileSize = this.file.size;
         this.fileName = this.file.name;
