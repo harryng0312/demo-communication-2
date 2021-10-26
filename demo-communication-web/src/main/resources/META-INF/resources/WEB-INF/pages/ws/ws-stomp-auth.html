@@ -105,23 +105,27 @@
             document.getElementById("text").value = "";
         }
 
+        function sendFilePart(from, to, headers, dataBuff){
+            let data = null;
+            for(let i=0; i < dataBuff.byteLength; i += uploadBufferSize){
+                let offsetBuffEnd = Math.min(i + uploadBufferSize, dataBuff.byteLength);
+                data = dataBuff.slice(i, offsetBuffEnd);
+                let msg = JSON.stringify({
+                    "from": from,
+                    "to": to,
+                    "type": "file-part",
+                    "content": DataUtil.byteArrayToBase64(new Uint8Array(data))
+                });
+                stompClient.send(sendFileEndpoint, headers, msg);
+            }
+        }
+
         function sendFile(file) {
             let from = document.getElementById('from').value;
             let to = document.getElementById("txtTo").value;
             let headers = {"fileName":file.name};
             let uploadHandler = (dataBuff) => {
-                let data = null;
-                for(let i=0; i < dataBuff.byteLength; i += uploadBufferSize){
-                    let offsetBuffEnd = Math.min(i + uploadBufferSize, dataBuff.byteLength);
-                    data = dataBuff.slice(i, offsetBuffEnd);
-                    let msg = JSON.stringify({
-                        "from": from,
-                        "to": to,
-                        "type": "file-part",
-                        "content": DataUtil.byteArrayToBase64(new Uint8Array(data))
-                    });
-                    stompClient.send(sendFileEndpoint, headers, msg);
-                }
+                sendFilePart(from, to, headers, dataBuff);
             };
             let doneHandler = (that) => {
                 console.log("upload done!");
