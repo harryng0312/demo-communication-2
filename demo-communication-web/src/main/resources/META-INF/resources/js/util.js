@@ -132,7 +132,6 @@ class FileReaderUtilParams {
 class FileReaderUtil {
     static DEFAULT_BUFFER_SIZE = 256 * 1024;
     file = null;
-    readBufferSize = FileReaderUtil.DEFAULT_BUFFER_SIZE;
     offset = 0;
     fileSize = 0;
     fileName = "";
@@ -157,6 +156,10 @@ class FileReaderUtil {
         this.reset();
     }
 
+    get readBufferSize(){
+        return FileReaderUtil.DEFAULT_BUFFER_SIZE;
+    }
+
     get hasBlock(){
         return this.offset < this.fileSize;
     }
@@ -174,7 +177,6 @@ class FileReaderUtil {
 
     reset(){
         this.offset = 0;
-        this.readBufferSize = FileReaderUtil.DEFAULT_BUFFER_SIZE;
         if(this.file==null) return;
         this.fileSize = this.file.size;
         this.fileName = this.file.name;
