@@ -14,7 +14,7 @@
         <div>
             <input id="userId" type="hidden" th:value="${user.id}"/>
             <div th:text="${user.screenName}"></div><br/>
-            <input type="text" id="from" th:placeholder="#{ws.chooseANickname}" th:value="${user.screenName}" />
+            <input type="text" id="from" th:placeholder="#{ws.chooseANickname}" th:value="${user.username}" />
             <br/><br/>
             <input type="text" id="txtTo" th:placeholder="#{ws.to}" /><br/>
         </div>
@@ -164,9 +164,7 @@
 
         function showMessageOutput(messageOutput) {
             let chatContent = $("#content");
-            let text = document.createTextNode(
-                messageOutput.from + " to " + messageOutput.to + ": " +
-                messageOutput.content + " (" + messageOutput.time + ")");
+            let text = document.createTextNode(`${messageOutput.time}:${messageOutput.from}:${messageOutput.content}`);
             let p = document.createElement('p');
             p.style.wordWrap = 'break-word';
             p.appendChild(text);
