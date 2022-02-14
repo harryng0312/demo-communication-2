@@ -99,6 +99,7 @@ public class TestKafka {
                 logger.info("Key: " + record.key() + ", Value:" + record.value());
                 logger.info("Partition:" + record.partition() + ", Offset:" + record.offset());
             }
+            consumer.commitAsync();
         }
     }
 
