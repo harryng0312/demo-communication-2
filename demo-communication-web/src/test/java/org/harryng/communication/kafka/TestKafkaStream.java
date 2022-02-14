@@ -63,7 +63,7 @@ public class TestKafkaStream {
 
         try {
             Path stateDirectory = Paths.get("./kafka-streams");
-            if(Files.exists(stateDirectory)) {
+            if(!Files.exists(stateDirectory)) {
                 stateDirectory = Files.createDirectory(stateDirectory);
             }
             props.put(StreamsConfig.STATE_DIR_CONFIG, stateDirectory.toAbsolutePath().toString());
