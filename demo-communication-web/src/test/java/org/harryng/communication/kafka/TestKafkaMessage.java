@@ -34,9 +34,9 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class TestKafka {
+public class TestKafkaMessage {
 
-    public static Logger logger = LoggerFactory.getLogger(TestKafka.class);
+    public static Logger logger = LoggerFactory.getLogger(TestKafkaMessage.class);
 
     public static String APP_ID_CFG = "app-id";
 //    public static String GROUP_ID_CFG = "group-id";
@@ -50,11 +50,12 @@ public class TestKafka {
         logger.info("test producer");
         Properties props = new Properties();
         props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
+        props.put(CommonClientConfigs.CLIENT_ID_CONFIG, APP_ID_CFG);
 
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
-        props.put(ProducerConfig.ACKS_CONFIG, "1");
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "trans-1");
 
@@ -85,9 +86,10 @@ public class TestKafka {
         Random random = new Random();
         Properties props = new Properties();
         props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
+        props.put(CommonClientConfigs.CLIENT_ID_CONFIG, APP_ID_CFG);
 
         props.put(ConsumerConfig.GROUP_ID_CONFIG, APP_ID_CFG);
-        props.put(CommonClientConfigs.CLIENT_ID_CONFIG, APP_ID_CFG);
+
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -104,27 +106,5 @@ public class TestKafka {
             }
             consumer.commitAsync();
         }
-    }
-
-    @Test
-    public void testStream() {
-        logger.info("test stream");
-        Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, APP_ID_CFG);
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-
-        StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, String> textLines = builder.stream(TOPIC_NAME);
-        KTable<String, Long> wordCounts = textLines
-                .flatMapValues(textLine -> Arrays.asList(textLine.toLowerCase().split("\\W+")))
-                .groupBy((key, word) -> word)
-                .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
-        wordCounts.toStream().to("WordsWithCountsTopic", Produced.with(Serdes.String(), Serdes.Long()));
-
-        KafkaStreams streams = new KafkaStreams(builder.build(), props);
-        streams.start();
-        logger.info("start stream...");
     }
 }
