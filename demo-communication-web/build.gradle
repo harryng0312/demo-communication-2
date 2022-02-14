@@ -45,6 +45,9 @@ dependencies {
 
     implementation "org.springframework.session:spring-session-jdbc:${springSessionVersion}"
 
+    implementation "org.apache.kafka:kafka-clients:${kafkaVer}"
+    implementation "org.apache.kafka:kafka-streams:${kafkaVer}"
+
     implementation "org.apache.commons:commons-dbcp2:${apacheCommonVersion}"
     implementation "org.apache.commons:commons-pool2:${apacheCommonVersion}"
 
@@ -80,7 +83,7 @@ dependencies {
 
     // test
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
-    testImplementation "org.springframework.integration:spring-integration-test:${springbootVersion}"
+//    testImplementation "org.springframework.integration:spring-integration-test:5.5.8"
 
     // for base gRPC
     implementation "io.grpc:grpc-netty:${grpcVer}"
@@ -91,11 +94,9 @@ dependencies {
     implementation "com.google.protobuf:protobuf-java:${protobufVer}"
     implementation "com.google.protobuf:protobuf-kotlin-lite:${protobufVer}"
 }
-
-// test {
-//     useJUnitPlatform()
-// }
-
+test {
+    useJUnitPlatform()
+}
 // tasks.withType<KotlinCompile> {
 //   kotlinOptions {
 //     freeCompilerArgs = listOf("-Xjsr305=strict")
