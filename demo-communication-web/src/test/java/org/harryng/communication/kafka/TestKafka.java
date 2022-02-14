@@ -1,5 +1,6 @@
 package org.harryng.communication.kafka;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -36,8 +38,8 @@ public class TestKafka {
 
     public static Logger logger = LoggerFactory.getLogger(TestKafka.class);
 
-    public static String APP_ID_CFG = "wordcount-app";
-    public static String GROUP_ID_CFG = "group-id";
+    public static String APP_ID_CFG = "app-id";
+//    public static String GROUP_ID_CFG = "group-id";
     public static String BOOTSTRAP_SERVERS_CFG = "localhost:9092";
 
     public static String TOPIC_NAME = "quickstart-events";
@@ -47,17 +49,18 @@ public class TestKafka {
     public void testProducer() {
         logger.info("test producer");
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
+        props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
+
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "trans-1");
 
         String testVal = "time: " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now());
 
-        KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
+        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         producer.initTransactions();
 
-        ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC_NAME, testVal);
+        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, testVal);
 
         producer.beginTransaction();
         Future<RecordMetadata> result = producer.send(record);
@@ -76,16 +79,19 @@ public class TestKafka {
     @Test
     public void testConsumer() {
         logger.info("test producer");
+        Random random = new Random();
         Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID_CFG);
+        props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
+
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, APP_ID_CFG);
+        props.put(CommonClientConfigs.CLIENT_ID_CONFIG, APP_ID_CFG);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
 
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList(TOPIC_NAME));
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
