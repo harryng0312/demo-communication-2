@@ -46,14 +46,14 @@ public class TestKafkaStream {
     public static Logger logger = LoggerFactory.getLogger(TestKafkaStream.class);
 
     public static String APP_ID_CFG = "app-id";
-//    public static String GROUP_ID_CFG = "group-id";
+    //    public static String GROUP_ID_CFG = "group-id";
     public static String BOOTSTRAP_SERVERS_CFG = "localhost:9092";
 
     public static String TOPIC_NAME = "quickstart-events";
     public static Integer PARTITION_NO = 1;
 
     @Test
-    public void testStream(){
+    public void testStream() {
         logger.info("test stream");
         Properties props = new Properties();
         props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS_CFG);
@@ -63,7 +63,7 @@ public class TestKafkaStream {
 
         try {
             Path stateDirectory = Paths.get("./kafka-streams");
-            if(!Files.exists(stateDirectory)) {
+            if (!Files.exists(stateDirectory)) {
                 stateDirectory = Files.createDirectory(stateDirectory);
             }
             props.put(StreamsConfig.STATE_DIR_CONFIG, stateDirectory.toAbsolutePath().toString());
@@ -80,13 +80,13 @@ public class TestKafkaStream {
                 .groupBy((key, word) -> word)
                 .count();
         wordCounts.toStream()
-                .foreach((word, count) -> System.out.println("word: " + word + " -> " + count));
+                .foreach((word, count) -> logger.info("word: " + word + " -> " + count));
 
         final Topology topology = builder.build();
         KafkaStreams streams = new KafkaStreams(topology, props);
         streams.start();
         try {
-            Thread.sleep(60*1000);
+            Thread.sleep(5 * 60 * 1000);
         } catch (InterruptedException e) {
             logger.error("", e);
         }
