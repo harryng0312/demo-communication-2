@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  zookeeper:
+    image: docker.io/bitnami/zookeeper
+    container_name: zookeeper
+    hostname: local-zk
+    read_only: false
+    ports:
+      - "2181:2181"
+    volumes:
+      - "./tmp:/tmp"
+      - "./zookeeper-data:/bitnami"
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - default
+#    networks:
+#      - backend
+  kafka:
+    image: docker.io/bitnami/kafka
+    container_name: kafka
+    hostname: local-kafka
+    read_only: false
+    ports:
+      - "9092:9092"
+    volumes:
+      - "./tmp:/tmp"
+      - "./kafka-data:/bitnami"
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - KAFKA_BROKER_ID=1
+#      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=local-zk:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    networks:
+      - default
+#      - frontend
+#      - backend
+#networks:
+#  frontend:
+#    driver: bridge
+#  backend:
+#    driver: bridge
+#volumes:
+#  zookeeper_data:
+#    driver: local
+#  kafka_data:
+#    driver: local
